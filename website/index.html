@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TaxCite — Verify Tax Law Citations in AI-Drafted Writing</title>
-<meta name="description" content="TaxCite is an open-source MCP server and CLI that verifies citations and quotations in AI-drafted U.S. federal tax writing against the Internal Revenue Code, Treasury Regulations, IRS guidance and federal case law. Catch fabricated citations and misquoted statutes.">
-<meta name="keywords" content="tax law citation verification, Internal Revenue Code, Treasury Regulations, IRS guidance, AI hallucination detection, legal tech, MCP server, Model Context Protocol, LLM tax research, CourtListener, case law verification, eCFR, 26 USC, 26 CFR, citation checker, legal research tool">
+<title>TaxCite — Verify, Navigate and Compute U.S. Federal Tax Law</title>
+<meta name="description" content="TaxCite is an open-source MCP server and CLI for U.S. federal tax work. Verify citations and quotations against the Internal Revenue Code, Treasury Regulations, IRS guidance and case law; navigate the consolidated return regulations; and compute I.R.C. § 382 limitations, § 382(g) owner shifts and § 381 attribute carryover — every answer traced to published authority.">
+<meta name="keywords" content="tax law citation verification, section 382 limitation calculator, section 382(g) ownership change, NOL carryforward limitation, section 381 attribute carryover, consolidated return regulations, SRLY limitation, Internal Revenue Code, Treasury Regulations, IRS guidance, M&A tax due diligence, deal tax modeling, AI hallucination detection, legal tech, MCP server, Model Context Protocol, LLM tax research, CourtListener, case law verification, eCFR, 26 USC, 26 CFR, long-term tax-exempt rate">
 <meta name="author" content="Muhammad Rakibul Islam">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://rakib-nyc.github.io/taxcite/">
@@ -13,11 +13,11 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="TaxCite">
 <meta property="og:url" content="https://rakib-nyc.github.io/taxcite/">
-<meta property="og:title" content="TaxCite — Verify Tax Law Citations in AI-Drafted Writing">
-<meta property="og:description" content="Open-source citation and quotation verification for U.S. federal tax law. Catch fabricated citations, misquoted statutes and invented case law against official government sources.">
+<meta property="og:title" content="TaxCite — Verify, Navigate and Compute U.S. Federal Tax Law">
+<meta property="og:description" content="Open-source tooling for U.S. federal tax work: verify citations and quotations, navigate the consolidated return regulations, and compute § 382 limitations and § 381 carryover — every answer traced to published authority.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="TaxCite — Verify Tax Law Citations in AI-Drafted Writing">
-<meta name="twitter:description" content="Open-source citation and quotation verification for U.S. federal tax law. Catch fabricated citations, misquoted statutes and invented case law.">
+<meta name="twitter:title" content="TaxCite — Verify, Navigate and Compute U.S. Federal Tax Law">
+<meta name="twitter:description" content="Verify tax citations, navigate the consolidated return regulations, and compute § 382 limitations — traced to published authority.">
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23fbf9f4'/%3E%3Ctext y='78' x='50' font-size='82' font-family='Georgia,serif' fill='%238c2f26' text-anchor='middle'%3E%C2%A7%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,14 +37,14 @@
   "url": "https://rakib-nyc.github.io/taxcite/",
   "codeRepository": "https://github.com/rakib-nyc/taxcite",
   "programmingLanguage": "Python",
-  "description": "An MCP server and command-line tool that retrieves U.S. federal tax law and verifies the citations and quotations in AI-drafted tax writing against official government sources.",
+  "description": "An MCP server and command-line tool for U.S. federal tax work: verifies citations and quotations against official government sources, navigates the regulations by cross-reference and defined term, and computes I.R.C. § 382 limitations, § 382(g) owner shifts and § 381 attribute carryover with every input cited.",
   "author": {
     "@type": "Person",
     "name": "Muhammad Rakibul Islam",
     "email": "rakib.islam@rutgers.edu"
   },
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "keywords": "tax law, citation verification, Internal Revenue Code, Treasury Regulations, AI hallucination, legal technology, Model Context Protocol"
+  "keywords": "tax law, citation verification, section 382 limitation, ownership change testing, attribute carryover, consolidated return regulations, Internal Revenue Code, Treasury Regulations, AI hallucination, legal technology, Model Context Protocol, M&A tax"
 }
 </script>
 
@@ -366,8 +366,9 @@ footer { border-top: 1px solid var(--rule); padding: 3rem 0 3.5rem; }
   <div class="shell masthead-in">
     <a class="wordmark" href="#top"><span class="sec">§</span>TaxCite</a>
     <nav>
-      <a href="#what" class="opt">What it does</a>
-      <a href="#cases" class="opt">Case law</a>
+      <a href="#verify" class="opt">Verify</a>
+      <a href="#navigate" class="opt">Navigate</a>
+      <a href="#compute" class="opt">Compute</a>
       <a href="#limits" class="tight">Limits</a>
       <a href="#install">Install</a>
       <a href="https://github.com/rakib-nyc/taxcite">GitHub</a>
@@ -380,9 +381,9 @@ footer { border-top: 1px solid var(--rule); padding: 3rem 0 3.5rem; }
 
 <div id="top" class="hero">
   <div class="shell">
-    <p class="eyebrow">Open source · Apache&nbsp;2.0 · v0.1.0 · Experimental</p>
-    <h1>Every citation a model writes, <em>checked against the law itself.</em></h1>
-    <p class="lede">Language models are fluent in the <strong>register</strong> of tax law and unreliable about its <strong>content</strong>. TaxCite reads a draft and tells you which authorities are real, which quotations are verbatim, and which it could not check.</p>
+    <p class="eyebrow">Open source · Apache&nbsp;2.0 · 1,055 tests · Experimental</p>
+    <h1>Tax answers that <em>show their authority.</em></h1>
+    <p class="lede">Verify what a draft cites. Navigate what governs a question. Compute what follows. TaxCite reads the Code, the regulations, the Bulletin and the case law, and <strong>every figure it returns names the provision that authorises it</strong> — or says plainly that it could not check.</p>
     <div class="cta-row">
       <div class="cmd"><span class="p">$</span>uv run taxcite verify memo.md</div>
       <a class="btn" href="https://github.com/rakib-nyc/taxcite">View on GitHub</a>
@@ -391,10 +392,39 @@ footer { border-top: 1px solid var(--rule); padding: 3rem 0 3.5rem; }
   </div>
 </div>
 
-<section id="what">
+<section id="three">
   <div class="shell">
     <div class="sec-head">
       <span class="sec-num">01</span>
+      <div>
+        <h2>Three things, one <em>discipline</em></h2>
+        <p class="sec-sub">Each answers a different question a tax reviewer actually asks. All three answer it the same way: from official text, with the provision named, and with the limits stated rather than left to be discovered.</p>
+      </div>
+    </div>
+    <div class="caps">
+      <div class="cap">
+        <span class="k">Verify</span>
+        <h3>Is this real, and is it quoted right?</h3>
+        <p>Citations, quotations, pinpoint pages, case names, whether an authority counts under Treas. Reg. § 1.6662-4, and whether a ruling has been superseded.</p>
+      </div>
+      <div class="cap">
+        <span class="k">Navigate</span>
+        <h3>What must I read, and what do the words mean?</h3>
+        <p>Reading lists that give both halves — the cross-references and the terms of art — for the corners of the regulations where a sentence is mostly defined terms.</p>
+      </div>
+      <div class="cap">
+        <span class="k">Compute</span>
+        <h3>What does the law say this number is?</h3>
+        <p>The § 382 limitation, § 382(g) owner shift testing, and § 381 attribute carryover — each line labelled with the provision that authorises it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="verify">
+  <div class="shell">
+    <div class="sec-head">
+      <span class="sec-num">02</span>
       <div>
         <h2>Three failures that look <em>identical on the page</em></h2>
         <p class="sec-sub">A fabricated citation, a misquoted statute and a correct quotation hung on the wrong section all read as confident prose. They need completely different corrections, so TaxCite reports them as three different things.</p>
@@ -424,7 +454,7 @@ footer { border-top: 1px solid var(--rule); padding: 3rem 0 3.5rem; }
 <section>
   <div class="shell">
     <div class="sec-head">
-      <span class="sec-num">02</span>
+      <span class="sec-num">03</span>
       <div>
         <h2>It returns a report, <em>not a verdict</em></h2>
         <p class="sec-sub">Markdown for a reader, JSON for a pipeline, and GitHub annotations for CI. Every finding carries the provision it matched, a word-level diff, and a link to the official source.</p>
@@ -453,7 +483,7 @@ footer { border-top: 1px solid var(--rule); padding: 3rem 0 3.5rem; }
 <section>
   <div class="shell">
     <div class="sec-head">
-      <span class="sec-num">03</span>
+      <span class="sec-num">04</span>
       <div>
         <h2>What it reads</h2>
         <p class="sec-sub">Official, public-domain government sources only. No proprietary research service is ever scraped, queried, or depended upon.</p>
@@ -491,6 +521,11 @@ footer { border-top: 1px solid var(--rule); padding: 3rem 0 3.5rem; }
         <h3>Time and amendment</h3>
         <p>Reads the effective-date formulas buried in statutory notes, so a provision cited for a year it did not govern is reported as an error.</p>
       </div>
+      <div class="cap">
+        <span class="k">§ 382(f)</span>
+        <h3>Published rates</h3>
+        <p>The long-term tax-exempt rate is not in the Code — it is published monthly in Table 3 of the applicable-federal-rate ruling, and read straight out of the Bulletin.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -498,7 +533,7 @@ footer { border-top: 1px solid var(--rule); padding: 3rem 0 3.5rem; }
 <section id="cases">
   <div class="shell">
     <div class="sec-head">
-      <span class="sec-num">04</span>
+      <span class="sec-num">05</span>
       <div>
         <h2>Checking a quotation <em>without the opinion</em></h2>
         <p class="sec-sub">The free case-law source publishes metadata, not opinion text. But it will answer a narrower question — <em>does this run of words occur in this decision?</em> — and that is a real verification.</p>
@@ -511,10 +546,95 @@ footer { border-top: 1px solid var(--rule); padding: 3rem 0 3.5rem; }
   </div>
 </section>
 
+<section id="navigate">
+  <div class="shell">
+    <div class="sec-head">
+      <span class="sec-num">06</span>
+      <div>
+        <h2>A sentence that is <em>mostly defined terms</em></h2>
+        <p class="sec-sub">Some regulations cannot be read straight through. A sentence of the consolidated return rules is built out of terms of art — each defined somewhere else, and reading it without them is reading it wrong.</p>
+      </div>
+    </div>
+
+    <div class="report">
+      <div class="report-bar"><span>taxcite reading-list "Treas. Reg. § 1.1502-21(c)"</span><span>SRLY limitation</span></div>
+<pre>Terms of art used here, and where they are defined
+
+  SRLY                        <span class="v">Treas. Reg. § 1.1502-1(f)(1)</span>
+  member                      <span class="v">Treas. Reg. § 1.1502-1(b)</span>
+  group                       <span class="v">Treas. Reg. § 1.1502-1(a)</span>
+  consolidated group          <span class="v">Treas. Reg. § 1.1502-1(h)</span>
+  separate return year        <span class="v">Treas. Reg. § 1.1502-1(e)</span>
+  consolidated return year    <span class="v">Treas. Reg. § 1.1502-1(d)</span>
+
+What this provision sends you to
+
+  1  Treas. Reg. § 1.1502-1(f) — Separate return limitation year
+  1  I.R.C. § 172 — Net operating loss deduction
+  1  I.R.C. § 1503(d) — Dual consolidated loss
+  1  I.R.C. § 163(j) — Limitation on business interest</pre>
+    </div>
+
+    <div class="narrow" style="margin-top:1.75rem">
+      <p><strong>Nothing here is curated.</strong> The cross-references come from the reference graph and the terms from the definitions index, both built from the official text. There is no editorial list of “things to read for SRLY”, because that would be an opinion wearing the clothes of a lookup.</p>
+      <p>Building it exposed a real gap. The eCFR <em>italicises</em> a defined term rather than quoting it, and italics do not survive text extraction — so “The term <em>member</em> means” matched nothing while “The term “consolidated group” means” matched. The most heavily defined corpus in Title 26 had almost none of its own terms indexed. It does now, abbreviations included, because the regulations define SRLY once and then write SRLY everywhere.</p>
+    </div>
+  </div>
+</section>
+
+<section id="compute">
+  <div class="shell">
+    <div class="sec-head">
+      <span class="sec-num">07</span>
+      <div>
+        <h2>What a target's losses are <em>actually worth</em></h2>
+        <p class="sec-sub">One question asked in three parts: what carries over, whether § 382 was triggered, and what the ceiling is if it was. Each is arithmetic or enumeration, and each is traceable to the statute.</p>
+      </div>
+    </div>
+
+    <div class="verdicts">
+      <div class="verdict">
+        <span class="chip ok">§ 381(c)</span>
+        <p class="note" style="font-size:.97rem;margin-bottom:.8rem"><b>What carries over.</b> A closed enumerated list of 23 attributes, plus 3 repealed. Read out of the indexed Code, so it cannot drift from the statute.</p>
+        <p class="note">It does not decide whether your transaction qualifies under § 381(a) — that turns on § 332 or a § 368(a)(1) reorganization, which is characterisation.</p>
+      </div>
+      <div class="verdict">
+        <span class="chip warn">§ 382(g)</span>
+        <p class="note" style="font-size:.97rem;margin-bottom:.8rem"><b>Did a change happen?</b> Each five-percent shareholder measured against their own low point over three years, increases summed, decreases floored at zero.</p>
+        <p class="note">A seller does not offset a buyer — which is why ordinary trading accumulates toward a change nobody intended.</p>
+      </div>
+      <div class="verdict">
+        <span class="chip bad">§ 382(b)</span>
+        <p class="note" style="font-size:.97rem;margin-bottom:.8rem"><b>What the ceiling is.</b> Value times the long-term tax-exempt rate, with the § 382(b)(2) carryforward and § 382(b)(3)(A) short-year proration applied.</p>
+        <p class="note">The rate is not in the Code. It is published monthly in the Bulletin, and TaxCite reads it from there.</p>
+      </div>
+    </div>
+
+    <div class="report" style="margin-top:1.75rem">
+      <div class="report-bar"><span>taxcite model-382 --value 50000000 --change-date 2026-09-15</span><span>workpaper</span></div>
+<pre>| Line                              |        Amount | Authority           |
+| Value of the old loss corporation | $50,000,000.00| <span class="v">I.R.C. § 382(e)(1)</span>  |
+| Long-term tax-exempt rate         |               | <span class="v">I.R.C. § 382(f)</span>     |
+<span class="d">    └─ 3.88% for September 2026, per Rev. Rul. 2026-17 (I.R.B. 2026-37)</span>
+| Base annual limitation            |  $1,940,000.00| <span class="v">I.R.C. § 382(b)(1)</span>  |
+
+| Year | Limitation | Carried in |     Income |   Absorbed | NOL remaining |
+| 2026 | $1,940,000 |         $0 | $1,500,000 | $1,500,000 |   $28,500,000 |
+| 2027 | $2,380,000 |   <span class="w">$440,000</span> | $2,000,000 | $2,000,000 |   $26,500,000 |
+| 2028 | $2,320,000 |   <span class="w">$380,000</span> | $4,000,000 | $2,320,000 |   $24,180,000 |</pre>
+    </div>
+
+    <div class="narrow" style="margin-top:1.75rem">
+      <p>A month whose rate has not been indexed produces <strong>no answer at all</strong> rather than a neighbouring month's rate — § 382(f) keys on the month, and substituting one would change the result invisibly. Built-in gain under § 382(h) and continuity under § 382(c)(1) are accepted as stated inputs and reported as assumptions, never as findings.</p>
+      <p>This is a computation, not a recommendation. It applies a rule to figures you supply and cites the authority for each step. <strong>It does not tell you whether to do the deal.</strong></p>
+    </div>
+  </div>
+</section>
+
 <section id="limits">
   <div class="shell">
     <div class="sec-head">
-      <span class="sec-num">05</span>
+      <span class="sec-num">08</span>
       <div>
         <h2>What it will <em>not</em> tell you</h2>
         <p class="sec-sub">The limits are the product. A tool that hedges everything is useless, and one that overclaims is dangerous — so each boundary below is stated in the report itself, not only here.</p>
@@ -525,6 +645,10 @@ footer { border-top: 1px solid var(--rule); padding: 3rem 0 3.5rem; }
       <div class="limit">
         <dt>Whether you are right</dt>
         <dd>TaxCite will happily confirm that a provision exists and is quoted correctly inside an argument that is completely wrong. It has no view on whether an authority supports the proposition it is cited for.</dd>
+      </div>
+      <div class="limit">
+        <dt>Whether a deal works</dt>
+        <dd>The models apply a rule to facts you supply. They do not determine whether an ownership change occurred, whether a transaction qualifies under § 381(a), what a corporation is worth, or whether any of it is advisable. Attribution under § 382(l)(3), public-group segregation under Treas. Reg. § 1.382-2T(j), and net unrealised built-in gain under § 382(h) are <em>not</em> applied, and every report says so.</dd>
       </div>
       <div class="limit">
         <dt>Whether a case is good law</dt>
@@ -553,7 +677,7 @@ footer { border-top: 1px solid var(--rule); padding: 3rem 0 3.5rem; }
 <section>
   <div class="shell">
     <div class="sec-head">
-      <span class="sec-num">06</span>
+      <span class="sec-num">09</span>
       <div>
         <h2>Your draft stays <em>on your machine</em></h2>
         <p class="sec-sub">With one exception, spelled out plainly because it matters under I.R.C. § 7216 and the ordinary duty of confidentiality.</p>
@@ -570,7 +694,7 @@ footer { border-top: 1px solid var(--rule); padding: 3rem 0 3.5rem; }
 <section id="install">
   <div class="shell">
     <div class="sec-head">
-      <span class="sec-num">07</span>
+      <span class="sec-num">10</span>
       <div>
         <h2>Install</h2>
         <p class="sec-sub">Python 3.11 or newer. The index builds in about ten seconds from an eight-megabyte download.</p>
@@ -597,8 +721,18 @@ footer { border-top: 1px solid var(--rule); padding: 3rem 0 3.5rem; }
       </div>
       <div class="step">
         <div>
+          <h3>Navigate and compute</h3>
+          <p>Reading lists over the regulations, and the deal-tax set.</p>
+<pre class="block"><span class="p">$</span> uv run taxcite reading-list "Treas. Reg. § 1.1502-21(c)"
+<span class="p">$</span> uv run taxcite carryover
+<span class="p">$</span> uv run taxcite owner-shift register.csv
+<span class="p">$</span> uv run taxcite model-382 --value 50000000 --change-date 2026-09-15</pre>
+        </div>
+      </div>
+      <div class="step">
+        <div>
           <h3>Connect it to an AI assistant</h3>
-          <p>TaxCite speaks the Model Context Protocol over stdio, exposing twelve tools for retrieval and verification.</p>
+          <p>TaxCite speaks the Model Context Protocol over stdio, exposing sixteen tools for retrieval, verification and computation.</p>
 <pre class="block"><span class="c"># Claude Code</span>
 <span class="p">$</span> claude mcp add taxcite -- uv --directory /path/to/taxcite run taxcite serve
 
@@ -618,9 +752,9 @@ footer { border-top: 1px solid var(--rule); padding: 3rem 0 3.5rem; }
       <p class="k">Please read before relying on this</p>
       <h2>Experimental research software</h2>
       <p><strong>TaxCite is an experimental research tool. It is not tax advice, not legal advice, and not a substitute for professional judgment or a commercial citation service.</strong></p>
-      <p>It verifies that cited provisions <strong>exist</strong> and that quoted language <strong>matches</strong> the official source. It does not judge whether a legal conclusion is correct, whether an authority is on point, or whether a decision is still good law.</p>
+      <p>It verifies that cited provisions <strong>exist</strong>, that quoted language <strong>matches</strong> the official source, and computes figures from rules applied to facts <strong>you supply</strong>. It does not judge whether a legal conclusion is correct, whether an authority is on point, whether a decision is still good law, or whether a transaction qualifies for any treatment.</p>
       <p><strong>No warranty is given.</strong> This software is provided “AS IS”, without warranty or condition of any kind, express or implied, and without any guarantee of accuracy, completeness, currency or fitness for a particular purpose — see sections 7 and 8 of the Apache License 2.0.</p>
-      <p><strong>You are responsible for independently verifying every authority you rely on.</strong> Do not file, serve or submit work on the strength of this tool alone.</p>
+      <p><strong>You are responsible for independently verifying every authority and every figure you rely on.</strong> Do not file, serve or submit work on the strength of this tool alone.</p>
     </div>
   </div>
 </section>
@@ -631,7 +765,7 @@ footer { border-top: 1px solid var(--rule); padding: 3rem 0 3.5rem; }
   <div class="shell foot">
     <div>
       <a class="wordmark" href="#top" style="font-size:1.4rem"><span class="sec">§</span>TaxCite</a>
-      <p class="colophon">Citation and quotation verification for U.S. federal tax law.<br>
+      <p class="colophon">Verify, navigate and compute U.S. federal tax law.<br>
       Copyright © 2026 <a href="mailto:rakib.islam@rutgers.edu">Muhammad Rakibul Islam</a>. Released under the Apache License 2.0.</p>
       <p class="colophon">Statutory, regulatory and judicial texts are works of the United States government and are in the public domain (17 U.S.C. § 105).</p>
     </div>
@@ -643,6 +777,7 @@ footer { border-top: 1px solid var(--rule); padding: 3rem 0 3.5rem; }
         <li><a href="https://github.com/rakib-nyc/taxcite/issues">Report an issue</a></li>
         <li><a href="https://github.com/rakib-nyc/taxcite/blob/main/LICENSE">Apache 2.0 licence</a></li>
         <li><a href="https://github.com/rakib-nyc/taxcite/blob/main/docs/privacy.md">Privacy statement</a></li>
+        <li><a href="https://github.com/rakib-nyc/taxcite/releases">Releases</a></li>
         <li><a href="https://github.com/rakib-nyc/taxcite/blob/main/docs/citation-grammar.md">Citation grammar</a></li>
       </ul>
     </div>
