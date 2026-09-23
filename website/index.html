@@ -19,10 +19,10 @@
 <meta name="twitter:title" content="TaxCite — Verify, Navigate and Compute U.S. Federal Tax Law">
 <meta name="twitter:description" content="Verify tax citations, navigate the consolidated return regulations, and compute § 382 limitations — traced to published authority.">
 
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23fbf9f4'/%3E%3Ctext y='78' x='50' font-size='82' font-family='Georgia,serif' fill='%238c2f26' text-anchor='middle'%3E%C2%A7%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23fff'/%3E%3Crect x='3' y='5' width='26' height='22' fill='none' stroke='%23000' stroke-width='2'/%3E%3Cpath d='M3 12h26M11 12v15' stroke='%23000' stroke-width='2'/%3E%3Cpath d='M15 17h10M15 21h7' stroke='%231b3a8f' stroke-width='2'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
 <script type="application/ld+json">
 {
@@ -50,339 +50,253 @@
 
 <style>
 /* ============================================================================
-   TaxCite — "the marked-up brief"
-   The page is dressed as the thing the tool produces: a document that has been
-   read closely and annotated in the margin. Hairlines instead of boxes, an
-   editorial serif instead of a UI sans, and the product's own status colours
-   doing the only shouting.
+   TaxCite — "the return"
+
+   The subject's own visual language is not the editorial broadsheet; it is the
+   federal form and the accountant's workpaper. Ruled boxes, a numbered line
+   gutter, a form ID in the corner, figures tied out to the authority beside
+   them. The product's output literally IS a workpaper, so the page is built on
+   the same grid the thing it describes is built on.
+
+   True black on true white — a form is printed, not tinted. One stamped blue,
+   the colour of an official mark. Line numbers appear only where the content is
+   genuinely a sequence. Monospace appears only inside real tabular data, never
+   as decoration.
    ========================================================================= */
 
 :root {
-  --paper:      #FBF9F4;
-  --paper-2:    #F3EFE6;
-  --paper-3:    #EAE4D7;
-  --ink:        #17140F;
-  --ink-2:      #453E33;
-  --ink-3:      #6E6455;
-  --rule:       #D8D0BF;
-  --rule-soft:  #E6DFD1;
+  --paper:   #ffffff;
+  --field:   #f1f3f6;   /* form field fill — cool, never cream */
+  --field-2: #e4e8ee;
+  --ink:     #000000;   /* true black; a printed form is not tinted */
+  --ink-2:   #33383f;
+  --ink-3:   #5f6672;
+  --rule:    #c3c9d2;
+  --rule-2:  #e0e4ea;
+  --stamp:   #1b3a8f;   /* official ink blue */
+  --stamp-2: #dde3f4;
 
-  --claret:     #8C2F26;
-  --claret-lo:  #F5E7E4;
-  --verified:   #2C6047;
-  --verified-lo:#E4EFE8;
-  --error:      #A3281B;
-  --error-lo:   #F8E5E2;
-  --caution:    #7D6321;
-  --caution-lo: #F5EEDB;
+  --pass: #0f6b3f;
+  --pass-bg: #e3f1e9;
+  --fail: #b3261e;
+  --fail-bg: #fbe6e4;
+  --hold: #8a5a00;
+  --hold-bg: #faefd9;
 
-  --display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
-  --body:    "Newsreader", Georgia, "Times New Roman", serif;
-  --mono:    "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --ui: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --data: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
-  --measure: 34rem;
-  --gutter: 1.25rem;
-  --shell: 70rem;
+  --gutter: 2.75rem;      /* the numbered line gutter */
+  --shell: 76rem;
+  --edge: 1rem;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper:      #14120F;
-    --paper-2:    #1C1915;
-    --paper-3:    #26221C;
-    --ink:        #F0EBE0;
-    --ink-2:      #C8C0B1;
-    --ink-3:      #9A9182;
-    --rule:       #3A342B;
-    --rule-soft:  #2A251F;
-    --claret:     #E0897C;
-    --claret-lo:  #2E1C19;
-    --verified:   #7FC0A0;
-    --verified-lo:#152420;
-    --error:      #EE9184;
-    --error-lo:   #2E1A17;
-    --caution:    #D8BC72;
-    --caution-lo: #26200F;
+    --paper: #0d0f12; --field: #171a1f; --field-2: #21252c;
+    --ink: #f4f6f8; --ink-2: #c3c9d2; --ink-3: #8a919b;
+    --rule: #333941; --rule-2: #232830;
+    --stamp: #8fb0ff; --stamp-2: #17203a;
+    --pass: #5cc48d; --pass-bg: #10241a;
+    --fail: #ef8b82; --fail-bg: #2a1614;
+    --hold: #d9ab52; --hold-bg: #241c0c;
   }
 }
 :root[data-theme="dark"] {
-  --paper:#14120F; --paper-2:#1C1915; --paper-3:#26221C;
-  --ink:#F0EBE0; --ink-2:#C8C0B1; --ink-3:#9A9182;
-  --rule:#3A342B; --rule-soft:#2A251F;
-  --claret:#E0897C; --claret-lo:#2E1C19;
-  --verified:#7FC0A0; --verified-lo:#152420;
-  --error:#EE9184; --error-lo:#2E1A17;
-  --caution:#D8BC72; --caution-lo:#26200F;
+  --paper:#0d0f12; --field:#171a1f; --field-2:#21252c;
+  --ink:#f4f6f8; --ink-2:#c3c9d2; --ink-3:#8a919b;
+  --rule:#333941; --rule-2:#232830; --stamp:#8fb0ff; --stamp-2:#17203a;
+  --pass:#5cc48d; --pass-bg:#10241a; --fail:#ef8b82; --fail-bg:#2a1614;
+  --hold:#d9ab52; --hold-bg:#241c0c;
 }
 
-* { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
-}
-
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
 body {
-  margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--body);
-  font-optical-sizing: auto;
-  font-size: 1.0625rem;
-  line-height: 1.62;
-  font-variant-numeric: oldstyle-nums;
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--ui); font-size: 1rem; line-height: 1.6;
+  font-variation-settings: "wdth" 100;
   overflow-x: hidden;
 }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
 
-.shell { width: min(var(--shell), 100% - calc(var(--gutter) * 2)); margin-inline: auto; }
-.narrow { max-width: var(--measure); }
-
-a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: .18em; }
-a:hover { color: var(--claret); }
+a { color: var(--stamp); text-underline-offset: .16em; text-decoration-thickness: 1px; }
+a:hover { color: var(--ink); }
+:focus-visible { outline: 2px solid var(--stamp); outline-offset: 2px; }
 
 .skip {
-  position: absolute; left: -9999px; top: 0; background: var(--ink); color: var(--paper);
-  padding: .6rem 1rem; z-index: 99; font-family: var(--mono); font-size: .8rem;
+  position: absolute; left: -9999px; top: 0; z-index: 99;
+  background: var(--ink); color: var(--paper); padding: .6rem 1rem; font-size: .85rem;
 }
 .skip:focus { left: 0; }
 
-/* ---- masthead ---------------------------------------------------------- */
-.masthead {
-  position: sticky; top: 0; z-index: 40;
-  background: color-mix(in srgb, var(--paper) 88%, transparent);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--rule);
+.shell { width: min(var(--shell), 100% - calc(var(--edge) * 2)); margin-inline: auto; }
+
+/* ---- form header ------------------------------------------------------- */
+.masthead { border-bottom: 2px solid var(--ink); background: var(--paper); }
+.masthead-in {
+  display: flex; align-items: center; gap: 1rem; min-height: 3.25rem; flex-wrap: wrap;
 }
-.masthead-in { display: flex; align-items: center; gap: 1.5rem; height: 3.75rem; }
-.wordmark {
-  font-family: var(--display); font-size: 1.6rem; letter-spacing: -.012em;
-  text-decoration: none; display: flex; align-items: baseline; gap: .34rem; line-height: 1;
+.mark { display: flex; align-items: baseline; gap: .5rem; text-decoration: none; color: var(--ink); }
+.mark b {
+  font-weight: 700; font-size: 1.22rem; letter-spacing: -.02em;
+  font-variation-settings: "wdth" 88;
 }
-.wordmark .sec { color: var(--claret); font-size: 1.5rem; }
-.wordmark:hover { color: inherit; }
-.masthead nav { margin-left: auto; display: flex; gap: 1.5rem; align-items: center; }
-.masthead nav a {
-  font-family: var(--mono); font-size: .72rem; letter-spacing: .09em;
-  text-transform: uppercase; text-decoration: none; color: var(--ink-2);
+.mark span { font-size: .72rem; color: var(--ink-3); font-variation-settings: "wdth" 88; }
+.masthead nav { margin-left: auto; display: flex; gap: 1.1rem; align-items: center; }
+.masthead nav a { font-size: .86rem; color: var(--ink-2); text-decoration: none; }
+.masthead nav a:hover { color: var(--stamp); text-decoration: underline; }
+@media (max-width: 44rem) { .masthead nav a.opt { display: none; } }
+
+.tbtn {
+  font: inherit; font-size: .78rem; background: none; cursor: pointer;
+  border: 1px solid var(--rule); color: var(--ink-2); padding: .22rem .5rem;
 }
-.masthead nav a:hover { color: var(--claret); }
-@media (max-width: 52rem) { .masthead nav { gap: 1.1rem; } .masthead nav a.opt { display: none; } }
-@media (max-width: 34rem) {
-  .masthead nav { gap: .85rem; }
-  .masthead nav a { font-size: .66rem; letter-spacing: .06em; }
-  .masthead nav a.tight { display: none; }
-  .wordmark { font-size: 1.35rem; }
-  .theme-btn { padding: .3rem .45rem; font-size: .62rem; }
-  /* A long command should scroll inside its own box, never widen the page. */
-  .cmd, .btn { width: 100%; justify-content: flex-start; }
-  .btn { justify-content: center; }
+.tbtn:hover { border-color: var(--stamp); color: var(--stamp); }
+
+/* ---- the numbered line gutter ------------------------------------------ */
+/* Used only where content really is a sequence. */
+.lines { border-top: 1px solid var(--rule); }
+.line { display: grid; grid-template-columns: var(--gutter) 1fr; border-bottom: 1px solid var(--rule-2); }
+.line > .no {
+  border-right: 1px solid var(--rule-2); padding: 1.15rem .5rem 1.15rem 0;
+  text-align: right; font-family: var(--data); font-size: .78rem; color: var(--ink-3);
 }
+.line > .body { padding: 1.15rem 0 1.4rem 1.15rem; min-width: 0; }
 
 /* ---- hero -------------------------------------------------------------- */
-.hero { padding: clamp(3rem, 9vw, 6.5rem) 0 clamp(2.5rem, 6vw, 4rem); }
-.eyebrow {
-  font-family: var(--mono); font-size: .7rem; letter-spacing: .16em;
-  text-transform: uppercase; color: var(--ink-3); margin: 0 0 1.5rem;
-  display: flex; align-items: center; gap: .7rem; flex-wrap: wrap;
+.hero { border-bottom: 2px solid var(--ink); }
+.hero-in { display: grid; gap: 0; }
+@media (min-width: 62rem) { .hero-in { grid-template-columns: 1.02fr .98fr; } }
+.hero-l { padding: clamp(2.2rem,5vw,3.6rem) 0 clamp(2rem,4vw,3rem); }
+@media (min-width: 62rem) {
+  .hero-l { padding-right: 3rem; border-right: 1px solid var(--rule); }
+  .hero-r { padding-left: 3rem; }
 }
-.eyebrow::before {
-  content: ""; width: 2.2rem; height: 1px; background: var(--claret); flex: none;
-}
+.hero-r { padding: clamp(1.4rem,3vw,2.4rem) 0 clamp(2.2rem,5vw,3.4rem); display: flex; flex-direction: column; justify-content: center; }
+
 h1 {
-  font-family: var(--display); font-weight: 400;
-  font-size: clamp(2.6rem, 7.4vw, 5.1rem); line-height: 1.02;
-  letter-spacing: -.021em; margin: 0 0 1.5rem; max-width: 18ch;
+  margin: 0 0 1.15rem; font-weight: 700;
+  font-size: clamp(2.05rem, 4.6vw, 3.15rem); line-height: 1.06;
+  letter-spacing: -.026em; font-variation-settings: "wdth" 86;
+  max-width: 17ch;
 }
-h1 em { font-style: italic; color: var(--claret); }
-.lede {
-  font-size: clamp(1.1rem, 2.1vw, 1.32rem); line-height: 1.52;
-  color: var(--ink-2); max-width: 44ch; margin: 0 0 2.25rem;
-}
-.lede strong { color: var(--ink); font-weight: 600; }
+.sub { font-size: clamp(1rem,1.5vw,1.09rem); color: var(--ink-2); max-width: 46ch; margin: 0 0 1.6rem; }
+.sub b { color: var(--ink); font-weight: 600; }
 
-.cta-row { display: flex; flex-wrap: wrap; gap: .85rem; align-items: stretch; }
-.cmd {
-  font-family: var(--mono); font-size: .855rem;
-  background: var(--paper-2); border: 1px solid var(--rule);
-  padding: .82rem 1.05rem; display: flex; align-items: center; gap: .65rem;
-  color: var(--ink); overflow-x: auto; white-space: nowrap; max-width: 100%;
-}
-.cmd .p { color: var(--claret); user-select: none; }
+.acts { display: flex; flex-wrap: wrap; gap: .6rem; }
 .btn {
-  font-family: var(--mono); font-size: .78rem; letter-spacing: .07em;
-  text-transform: uppercase; text-decoration: none;
-  padding: .82rem 1.5rem; border: 1px solid var(--ink);
-  background: var(--ink); color: var(--paper);
-  display: inline-flex; align-items: center; gap: .5rem; transition: opacity .15s;
+  font: inherit; font-size: .9rem; font-weight: 600; text-decoration: none;
+  padding: .62rem 1.15rem; border: 1.5px solid var(--ink); background: var(--ink); color: var(--paper);
 }
-.btn:hover { opacity: .82; color: var(--paper); }
-.btn-ghost { background: transparent; color: var(--ink); border-color: var(--rule); }
-.btn-ghost:hover { border-color: var(--claret); color: var(--claret); }
+.btn:hover { background: var(--stamp); border-color: var(--stamp); color: #fff; }
+.btn-2 { background: transparent; color: var(--ink); }
+.btn-2:hover { background: transparent; color: var(--stamp); border-color: var(--stamp); }
 
-/* ---- section furniture -------------------------------------------------- */
-section {
-  padding: clamp(3.25rem, 7vw, 5.75rem) 0;
-  border-top: 1px solid var(--rule-soft);
-  /* The masthead is sticky, so an anchor jump would otherwise land with the
-     heading tucked underneath it. */
-  scroll-margin-top: 3.75rem;
+.cmdline {
+  font-family: var(--data); font-size: .84rem; border: 1px solid var(--rule);
+  background: var(--field); padding: .58rem .7rem; margin-top: 1.1rem;
+  overflow-x: auto; white-space: nowrap; color: var(--ink);
 }
-.sec-head { display: flex; gap: 1.5rem; align-items: baseline; margin-bottom: 2.5rem; flex-wrap: wrap; }
-.sec-num {
-  font-family: var(--mono); font-size: .72rem; letter-spacing: .12em;
-  color: var(--claret); flex: none; padding-top: .55rem;
+.cmdline i { color: var(--stamp); font-style: normal; user-select: none; }
+
+/* ---- the filled form panel: the one bold moment ------------------------ */
+.sheet { border: 1.5px solid var(--ink); background: var(--paper); }
+.sheet-hd {
+  display: flex; justify-content: space-between; gap: .75rem; align-items: baseline;
+  padding: .5rem .8rem; border-bottom: 1.5px solid var(--ink); background: var(--field);
+  font-size: .76rem; color: var(--ink-2);
 }
+.sheet-hd b { font-weight: 600; color: var(--ink); font-family: var(--data); font-size: .78rem; }
+.rows { font-family: var(--data); font-size: .8rem; }
+.row {
+  display: grid; grid-template-columns: 1.7rem 1fr auto;
+  gap: .6rem; padding: .5rem .8rem; border-bottom: 1px solid var(--rule-2);
+  align-items: baseline;
+}
+.row:last-child { border-bottom: 0; }
+.row .n { color: var(--ink-3); font-size: .74rem; }
+.row .w { min-width: 0; overflow-wrap: anywhere; }
+.row .auth { color: var(--stamp); font-size: .74rem; white-space: nowrap; }
+.row.tot { background: var(--field); font-weight: 600; border-top: 1.5px solid var(--ink); border-bottom: 0; }
+.row .note { grid-column: 2 / -1; color: var(--ink-3); font-size: .73rem; padding-top: .18rem; }
+
+/* One orchestrated page-load reveal, and nothing else moves. */
+@media (prefers-reduced-motion: no-preference) {
+  .sheet .row { animation: fill .34s ease-out backwards; }
+  .sheet .row:nth-child(1) { animation-delay: .10s }
+  .sheet .row:nth-child(2) { animation-delay: .20s }
+  .sheet .row:nth-child(3) { animation-delay: .30s }
+  .sheet .row:nth-child(4) { animation-delay: .40s }
+  .sheet .row:nth-child(5) { animation-delay: .50s }
+  .sheet .row:nth-child(6) { animation-delay: .60s }
+  @keyframes fill { from { opacity: 0 } to { opacity: 1 } }
+}
+
+/* ---- headings ---------------------------------------------------------- */
 h2 {
-  font-family: var(--display); font-weight: 400;
-  font-size: clamp(1.9rem, 4.3vw, 2.9rem); line-height: 1.1;
-  letter-spacing: -.016em; margin: 0; max-width: 22ch;
+  margin: 0 0 .5rem; font-weight: 700; font-size: clamp(1.35rem,2.4vw,1.72rem);
+  line-height: 1.16; letter-spacing: -.018em; font-variation-settings: "wdth" 88;
+  max-width: 24ch;
 }
-h2 em { font-style: italic; color: var(--claret); }
-.sec-sub { color: var(--ink-2); max-width: var(--measure); margin: 1.1rem 0 0; font-size: 1.06rem; }
+.lede { color: var(--ink-2); max-width: 58ch; margin: 0 0 1.5rem; }
+h3 { margin: 0 0 .4rem; font-weight: 600; font-size: 1.02rem; letter-spacing: -.008em; }
+p { margin: 0 0 .85rem; max-width: 66ch; }
+p:last-child { margin-bottom: 0; }
 
-/* ---- verdicts ----------------------------------------------------------- */
-.verdicts { display: grid; gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
-@media (min-width: 52rem) { .verdicts { grid-template-columns: repeat(3, 1fr); } }
-.verdict { background: var(--paper); padding: 1.6rem 1.5rem 1.75rem; }
-.chip {
-  font-family: var(--mono); font-size: .67rem; letter-spacing: .1em;
-  text-transform: uppercase; padding: .3rem .6rem; display: inline-block; margin-bottom: 1.1rem;
-  border: 1px solid currentColor;
-}
-.chip.ok   { color: var(--verified); background: var(--verified-lo); }
-.chip.bad  { color: var(--error);    background: var(--error-lo); }
-.chip.warn { color: var(--caution);  background: var(--caution-lo); }
-.quoted {
-  font-size: 1.02rem; line-height: 1.5; margin: 0 0 1rem;
-  padding-left: .9rem; border-left: 2px solid var(--rule);
-}
-.quoted .strike { text-decoration: line-through; text-decoration-color: var(--error); color: var(--ink-3); }
-.quoted .ins { color: var(--error); font-weight: 600; background: var(--error-lo); padding: 0 .12em; }
-.verdict p.note { font-size: .92rem; color: var(--ink-3); margin: 0; line-height: 1.5; }
-.verdict p.note b { color: var(--ink-2); font-weight: 600; }
+/* ---- boxed field groups ------------------------------------------------ */
+.fields { display: grid; }
+@media (min-width: 48rem) { .fields.two { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 60rem) { .fields.three { grid-template-columns: repeat(3,1fr); } }
+.field { border: 1px solid var(--rule); padding: 1rem 1.05rem 1.1rem; margin: 0 0 -1px -1px; }
+.field .cap { font-size: .8rem; color: var(--stamp); font-weight: 600; margin: 0 0 .3rem; }
+.field p { font-size: .93rem; color: var(--ink-2); margin: 0; }
 
-/* ---- report ------------------------------------------------------------- */
-.report {
-  border: 1px solid var(--rule); background: var(--paper-2);
-  font-family: var(--mono); font-size: .8rem; line-height: 1.75; overflow-x: auto;
-}
-.report-bar {
-  padding: .6rem 1rem; border-bottom: 1px solid var(--rule);
-  color: var(--ink-3); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase;
-  display: flex; justify-content: space-between; gap: 1rem; background: var(--paper-3);
-}
-.report pre { margin: 0; padding: 1.15rem 1rem 1.35rem; white-space: pre; }
-.report .v { color: var(--verified); }
-.report .e { color: var(--error); }
-.report .w { color: var(--caution); }
-.report .d { color: var(--ink-3); }
+/* ---- verdict boxes ----------------------------------------------------- */
+.stat { display: inline-block; font-family: var(--data); font-size: .72rem; padding: .16rem .42rem; border: 1px solid currentColor; margin-bottom: .7rem; }
+.stat.p { color: var(--pass); background: var(--pass-bg); }
+.stat.f { color: var(--fail); background: var(--fail-bg); }
+.stat.h { color: var(--hold); background: var(--hold-bg); }
+.quo { font-size: .96rem; border-left: 3px solid var(--rule); padding-left: .75rem; margin: 0 0 .7rem; }
+.quo del { text-decoration-color: var(--fail); color: var(--ink-3); }
+.quo ins { text-decoration: none; color: var(--fail); background: var(--fail-bg); font-weight: 600; padding: 0 .1em; }
 
-/* ---- the three questions, each shown rather than described -------------- */
-.trio { display: grid; gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
-@media (min-width: 60rem) { .trio { grid-template-columns: repeat(3, 1fr); } }
-.trio article { background: var(--paper); padding: 1.6rem 1.5rem 1.7rem; display: flex; flex-direction: column; }
-.trio .k {
-  font-family: var(--mono); font-size: .66rem; letter-spacing: .13em;
-  text-transform: uppercase; color: var(--claret); display: block; margin-bottom: .75rem;
+/* ---- data block -------------------------------------------------------- */
+.block { border: 1px solid var(--rule); background: var(--field); overflow-x: auto; }
+.block-hd {
+  padding: .45rem .75rem; border-bottom: 1px solid var(--rule); background: var(--field-2);
+  font-family: var(--data); font-size: .74rem; color: var(--ink-2);
+  display: flex; justify-content: space-between; gap: 1rem;
 }
-.trio h3 {
-  font-family: var(--body); font-weight: 600; font-size: 1.08rem;
-  margin: 0 0 1.05rem; letter-spacing: -.006em; line-height: 1.32;
-}
-.mini {
-  background: var(--paper-2); border: 1px solid var(--rule-soft);
-  padding: .8rem .85rem; margin-bottom: 1.05rem; overflow-x: auto;
-}
-.mini pre {
-  margin: 0; font-family: var(--mono); font-size: .715rem; line-height: 1.7;
-  white-space: pre; color: var(--ink);
-}
-.mini .v { color: var(--verified); }
-.mini .e { color: var(--error); }
-.mini .w { color: var(--caution); }
-.mini .d { color: var(--ink-3); }
-.trio article > p { margin: auto 0 0; font-size: .93rem; color: var(--ink-2); line-height: 1.55; }
+.block pre { margin: 0; padding: .85rem .75rem 1rem; font-family: var(--data); font-size: .78rem; line-height: 1.72; white-space: pre; color: var(--ink); }
+.block .p { color: var(--pass); } .block .f { color: var(--fail); }
+.block .h { color: var(--hold); } .block .g { color: var(--ink-3); }
+.block .a { color: var(--stamp); }
 
-/* ---- grid of capabilities ---------------------------------------------- */
-.caps { display: grid; gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
-@media (min-width: 40rem) { .caps { grid-template-columns: 1fr 1fr; } }
-@media (min-width: 64rem) { .caps { grid-template-columns: repeat(3, 1fr); } }
-.cap { background: var(--paper); padding: 1.5rem 1.4rem 1.6rem; }
-.cap h3 {
-  font-family: var(--body); font-weight: 600; font-size: 1.04rem;
-  margin: 0 0 .5rem; letter-spacing: -.005em;
-}
-.cap .k {
-  font-family: var(--mono); font-size: .65rem; letter-spacing: .12em;
-  text-transform: uppercase; color: var(--claret); display: block; margin-bottom: .7rem;
-}
-.cap p { margin: 0; font-size: .95rem; color: var(--ink-2); line-height: 1.55; }
+/* ---- definition rows --------------------------------------------------- */
+.defs { border-top: 1px solid var(--rule); }
+.defs div { display: grid; gap: .2rem 1.5rem; padding: .85rem 0; border-bottom: 1px solid var(--rule-2); }
+@media (min-width: 46rem) { .defs div { grid-template-columns: 16rem 1fr; } }
+.defs dt { font-weight: 600; font-size: .94rem; }
+.defs dd { margin: 0; color: var(--ink-2); font-size: .96rem; }
 
-/* ---- limits ------------------------------------------------------------- */
-.limits { border-top: 1px solid var(--rule); }
-.limit {
-  display: grid; gap: .35rem 1.75rem; padding: 1.3rem 0;
-  border-bottom: 1px solid var(--rule-soft);
-}
-@media (min-width: 46rem) { .limit { grid-template-columns: 15rem 1fr; } }
-.limit dt {
-  font-family: var(--mono); font-size: .74rem; letter-spacing: .05em;
-  text-transform: uppercase; color: var(--claret); padding-top: .18rem;
-}
-.limit dd { margin: 0; color: var(--ink-2); font-size: 1rem; }
+/* ---- notice ------------------------------------------------------------ */
+.notice { border: 2px solid var(--ink); background: var(--field); padding: clamp(1.1rem,2.6vw,1.6rem); }
+.notice h2 { margin-bottom: .7rem; }
+.notice p { color: var(--ink-2); font-size: .97rem; }
+.notice b { color: var(--ink); }
 
-/* ---- install ------------------------------------------------------------ */
-.steps { counter-reset: s; display: grid; gap: 1.6rem; }
-.step { display: grid; gap: .55rem 1.25rem; }
-@media (min-width: 46rem) { .step { grid-template-columns: 2.4rem 1fr; } }
-.step::before {
-  counter-increment: s; content: counter(s, decimal-leading-zero);
-  font-family: var(--mono); font-size: .8rem; color: var(--claret); padding-top: .18rem;
-}
-.step h3 { font-family: var(--body); font-weight: 600; font-size: 1.05rem; margin: 0 0 .45rem; }
-.step p { margin: 0 0 .7rem; color: var(--ink-2); font-size: .98rem; }
-pre.block {
-  font-family: var(--mono); font-size: .8rem; line-height: 1.7;
-  background: var(--paper-2); border: 1px solid var(--rule);
-  padding: .95rem 1.05rem; overflow-x: auto; margin: 0; color: var(--ink);
-}
-pre.block .c { color: var(--ink-3); }
-pre.block .p { color: var(--claret); }
-
-/* ---- disclaimer --------------------------------------------------------- */
-.disclaimer {
-  border: 1px solid var(--claret); background: var(--claret-lo);
-  padding: clamp(1.4rem, 3.5vw, 2.1rem);
-}
-.disclaimer .k {
-  font-family: var(--mono); font-size: .68rem; letter-spacing: .14em;
-  text-transform: uppercase; color: var(--claret); margin: 0 0 .9rem;
-}
-.disclaimer h2 { font-size: clamp(1.5rem, 3.4vw, 2.05rem); margin-bottom: .9rem; }
-.disclaimer p { color: var(--ink-2); max-width: 58ch; margin: 0 0 .85rem; font-size: 1rem; }
-.disclaimer p:last-child { margin-bottom: 0; }
-.disclaimer strong { color: var(--ink); }
-
-/* ---- footer ------------------------------------------------------------- */
-footer { border-top: 1px solid var(--rule); padding: 3rem 0 3.5rem; }
-.foot { display: grid; gap: 2rem; }
-@media (min-width: 52rem) { .foot { grid-template-columns: 1.4fr 1fr 1fr; } }
-.foot h4 {
-  font-family: var(--mono); font-size: .66rem; letter-spacing: .13em;
-  text-transform: uppercase; color: var(--ink-3); margin: 0 0 .85rem; font-weight: 500;
-}
-.foot ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; }
-.foot a { font-size: .96rem; text-decoration: none; color: var(--ink-2); }
-.foot a:hover { color: var(--claret); text-decoration: underline; }
-.colophon { font-size: .92rem; color: var(--ink-3); max-width: 38ch; margin: .8rem 0 0; }
-.colophon a { color: var(--ink-2); }
-
-.theme-btn {
-  font-family: var(--mono); font-size: .68rem; letter-spacing: .09em; text-transform: uppercase;
-  background: none; border: 1px solid var(--rule); color: var(--ink-3);
-  padding: .34rem .6rem; cursor: pointer;
-}
-.theme-btn:hover { color: var(--claret); border-color: var(--claret); }
+/* ---- footer ------------------------------------------------------------ */
+footer { border-top: 2px solid var(--ink); padding: 2rem 0 2.5rem; }
+.foot { display: grid; gap: 1.6rem; }
+@media (min-width: 52rem) { .foot { grid-template-columns: 1.5fr 1fr 1fr; } }
+.foot h4 { margin: 0 0 .55rem; font-size: .82rem; font-weight: 600; color: var(--ink); }
+.foot ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .32rem; }
+.foot a { font-size: .9rem; color: var(--ink-2); text-decoration: none; }
+.foot a:hover { color: var(--stamp); text-decoration: underline; }
+.fine { font-size: .86rem; color: var(--ink-3); max-width: 42ch; margin: .6rem 0 0; }
 </style>
 </head>
 <body>
@@ -390,450 +304,263 @@ footer { border-top: 1px solid var(--rule); padding: 3rem 0 3.5rem; }
 
 <header class="masthead">
   <div class="shell masthead-in">
-    <a class="wordmark" href="#top"><span class="sec">§</span>TaxCite</a>
+    <a class="mark" href="#top"><b>TaxCite</b> <span>Form TC&#8209;1 &nbsp;Rev. 2026&#8209;09</span></a>
     <nav>
-      <a href="#verify" class="opt">Verify</a>
-      <a href="#navigate" class="opt">Navigate</a>
-      <a href="#compute" class="opt">Compute</a>
-      <a href="#limits" class="tight">Limits</a>
+      <a href="#check" class="opt">Verify</a>
+      <a href="#read" class="opt">Navigate</a>
+      <a href="#figure" class="opt">Compute</a>
+      <a href="#limits">Limits</a>
       <a href="#install">Install</a>
       <a href="https://github.com/rakib-nyc/taxcite">GitHub</a>
-      <button class="theme-btn" id="theme" type="button" aria-label="Toggle colour scheme">Theme</button>
+      <button class="tbtn" id="theme" type="button" aria-label="Toggle colour scheme">Theme</button>
     </nav>
   </div>
 </header>
 
 <main id="main">
 
-<div id="top" class="hero">
-  <div class="shell">
-    <p class="eyebrow">Open source · Apache&nbsp;2.0 · 1,055 tests · Experimental</p>
-    <h1>Tax answers that <em>show their authority.</em></h1>
-    <p class="lede">Verify what a draft cites. Navigate what governs a question. Compute what follows. TaxCite reads the Code, the regulations, the Bulletin and the case law, and <strong>every figure it returns names the provision that authorises it</strong> — or says plainly that it could not check.</p>
-    <div class="cta-row">
-      <div class="cmd"><span class="p">$</span>uv run taxcite verify memo.md</div>
-      <a class="btn" href="https://github.com/rakib-nyc/taxcite">View on GitHub</a>
-      <a class="btn btn-ghost" href="#install">Install</a>
+<div class="hero" id="top">
+  <div class="shell hero-in">
+    <div class="hero-l">
+      <h1>Every figure tied out to the authority it came from.</h1>
+      <p class="sub">TaxCite reads the Internal Revenue Code, the Treasury Regulations, the Bulletin and federal case law. It checks what a draft cites, finds what governs a question, and computes what follows — <b>and it tells you what it could not check.</b></p>
+      <div class="acts">
+        <a class="btn" href="https://github.com/rakib-nyc/taxcite">Source on GitHub</a>
+        <a class="btn btn-2" href="#install">Install</a>
+      </div>
+      <div class="cmdline"><i>$</i> uv run taxcite model-382 --value 50000000 --change-date 2026-09-15</div>
+    </div>
+
+    <div class="hero-r">
+      <div class="sheet">
+        <div class="sheet-hd"><span>Section&nbsp;382 limitation</span><b>WORKPAPER</b></div>
+        <div class="rows">
+          <div class="row"><span class="n">1</span><span class="w">Value of the old loss corporation</span><span class="auth">&#167;&nbsp;382(e)(1)</span></div>
+          <div class="row"><span class="n"></span><span class="w"><b>$50,000,000.00</b></span><span class="auth">as supplied</span></div>
+          <div class="row"><span class="n">2</span><span class="w">Long&#8209;term tax&#8209;exempt rate &nbsp;<b>3.88%</b></span><span class="auth">&#167;&nbsp;382(f)</span>
+            <span class="note">September 2026, published in Rev. Rul. 2026&#8209;17 (I.R.B. 2026&#8209;37)</span></div>
+          <div class="row"><span class="n">3</span><span class="w">Short taxable year, 107 days</span><span class="auth">&#167;&nbsp;382(b)(3)(A)</span></div>
+          <div class="row"><span class="n">4</span><span class="w">Unused limitation carried forward</span><span class="auth">&#167;&nbsp;382(b)(2)</span></div>
+          <div class="row tot"><span class="n">5</span><span class="w">Annual limitation &nbsp;<b>$1,940,000.00</b></span><span class="auth">&#167;&nbsp;382(b)(1)</span></div>
+        </div>
+      </div>
+      <p class="fine">Not a recommendation. It applies a rule to figures you supply, names the ruling the rate came from, and lists what it did not determine.</p>
     </div>
   </div>
 </div>
 
-<section id="three">
-  <div class="shell">
-    <div class="sec-head">
-      <span class="sec-num">01</span>
-      <div>
-        <h2>Three questions, one <em>discipline</em></h2>
-        <p class="sec-sub">Different questions, answered the same way: from official text, with the provision named, and with the limits stated rather than left to be discovered.</p>
-      </div>
-    </div>
+<div class="shell">
+<div class="lines">
 
-    <div class="trio">
-      <article>
-        <span class="k">Verify</span>
-        <h3>Is this real, and is it quoted right?</h3>
-        <div class="mini">
-<pre>§ 162(a)   <span class="v">ok: verified, quote_exact</span>
-§ 162(z)   <span class="e">ERROR: pinpoint_not_found</span>
-<span class="d">           § 162 has (a)–(s); no (z)</span>
-§ 263(a)   <span class="e">ERROR: quote_misattributed</span>
-<span class="d">           appears at § 61(a)</span></pre>
+  <div class="line" id="check">
+    <div class="no">01</div>
+    <div class="body">
+      <h2>Three failures that read identically on the page</h2>
+      <p class="lede">A fabricated citation, a misquoted statute and a correct quotation hung on the wrong section all look like confident prose. They need completely different corrections, so each is reported as a different thing.</p>
+      <div class="fields three">
+        <div class="field">
+          <span class="stat p">quote_exact</span>
+          <p class="quo">&#8220;the standard set up by the statute is not a rule of law; it is rather a way of life.&#8221;</p>
+          <p><b>Welch v. Helvering</b>, 290 U.S. 111. Every word occurs in the decision, in order.</p>
         </div>
-        <p>Citations, quotations, pinpoint pages, case names, whether an authority counts under Treas. Reg. § 1.6662-4, and whether a ruling has been superseded.</p>
-      </article>
-
-      <article>
-        <span class="k">Navigate</span>
-        <h3>What must I read, and what do the words mean?</h3>
-        <div class="mini">
-<pre>Treas. Reg. § 1.1502-21(c)
-
-SRLY      <span class="v">§ 1.1502-1(f)(1)</span>
-member    <span class="v">§ 1.1502-1(b)</span>
-group     <span class="v">§ 1.1502-1(a)</span>
-<span class="d">+ 12 provisions it sends you to</span></pre>
+        <div class="field">
+          <span class="stat h">quote_close</span>
+          <p class="quo">&#8220;&hellip; it is rather <del>a way of life</del> <ins>a submarine protocol</ins>.&#8221;</p>
+          <p><b>Misquoted, not invented.</b> The first seventeen words are genuine; it stops matching at &#8220;submarine&#8221;.</p>
         </div>
-        <p>Reading lists that give both halves — the cross-references and the terms of art — for the corners of the regulations where a sentence is mostly defined terms.</p>
-      </article>
-
-      <article>
-        <span class="k">Compute</span>
-        <h3>What does the law say this number is?</h3>
-        <div class="mini">
-<pre>Value      $50,000,000  <span class="v">§ 382(e)(1)</span>
-Rate             3.88%  <span class="v">§ 382(f)</span>
-<span class="d">           Rev. Rul. 2026-17</span>
-<span class="w">Limitation  $1,940,000</span>  <span class="v">§ 382(b)(1)</span></pre>
+        <div class="field">
+          <span class="stat f">quote_not_found</span>
+          <p class="quo">&#8220;quarterly submarine inspection protocols govern the deduction of periscope costs.&#8221;</p>
+          <p><b>No run of these words</b> occurs anywhere in the decision it was attributed to.</p>
         </div>
-        <p>The § 382 limitation, § 382(g) owner shift testing, and § 381 attribute carryover — each line labelled with the provision that authorises it.</p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<section id="verify">
-  <div class="shell">
-    <div class="sec-head">
-      <span class="sec-num">02</span>
-      <div>
-        <h2>Three failures that look <em>identical on the page</em></h2>
-        <p class="sec-sub">A fabricated citation, a misquoted statute and a correct quotation hung on the wrong section all read as confident prose. They need completely different corrections, so TaxCite reports them as three different things.</p>
-      </div>
-    </div>
-
-    <div class="verdicts">
-      <div class="verdict">
-        <span class="chip ok">Quote exact</span>
-        <p class="quoted">“the standard set up by the statute is not a rule of law; it is rather a way of life.”</p>
-        <p class="note"><b>Welch v. Helvering, 290 U.S. 111.</b> Every word occurs in the decision, in order.</p>
-      </div>
-      <div class="verdict">
-        <span class="chip warn">Quote close</span>
-        <p class="quoted">“the standard set up by the statute is not a rule of law; it is rather <span class="strike">a way of life</span> <span class="ins">a submarine protocol</span>.”</p>
-        <p class="note"><b>Misquoted, not invented.</b> The first seventeen words are genuine; it stops matching at “submarine”.</p>
-      </div>
-      <div class="verdict">
-        <span class="chip bad">Not found</span>
-        <p class="quoted">“quarterly submarine inspection protocols govern the deduction of periscope costs.”</p>
-        <p class="note"><b>No run of these words</b> occurs anywhere in the decision it was attributed to.</p>
       </div>
     </div>
   </div>
-</section>
 
-<section>
-  <div class="shell">
-    <div class="sec-head">
-      <span class="sec-num">03</span>
-      <div>
-        <h2>It returns a report, <em>not a verdict</em></h2>
-        <p class="sec-sub">Markdown for a reader, JSON for a pipeline, and GitHub annotations for CI. Every finding carries the provision it matched, a word-level diff, and a link to the official source.</p>
+  <div class="line">
+    <div class="no">02</div>
+    <div class="body">
+      <h2>It returns a report, not a verdict</h2>
+      <p class="lede">Markdown for a reader, JSON for a pipeline, GitHub annotations for CI. Every finding carries the provision it matched, a word&#8209;level diff, and a link to the official text.</p>
+      <div class="block">
+        <div class="block-hd"><span>taxcite verify memo.md</span><span>irc 119-110 &nbsp;reg 2026-09-08</span></div>
+<pre>  1  I.R.C. &#167; 162(a)          <span class="p">ok: verified, quote_exact</span>
+  2  I.R.C. &#167; 162(z)          <span class="f">ERROR: pinpoint_not_found</span>
+     <span class="g">&#8627; &#167; 162 has subsections (a)&#8211;(s); there is no (z)</span>
+  3  I.R.C. &#167; 263(a)          <span class="f">ERROR: quote_misattributed</span>
+     <span class="g">&#8627; the quoted language appears at I.R.C. &#167; 61(a)</span>
+  4  Rev. Rul. 82-204          <span class="h">warning: superseded</span>
+     <span class="g">&#8627; Rev. Rul. 2026-3 states that it supersedes this</span>
+  5  T.C. Memo. 2099-999       <span class="f">ERROR: not_found</span>
+     <span class="g">&#8627; dated 2099, which is in the future</span>
+  6  Smith v. Jones, 9 T.C. 1  <span class="h">info: unverifiable</span>
+     <span class="g">&#8627; Tax Court coverage is partial &#8212; not evidence it does not exist</span></pre>
       </div>
-    </div>
-
-    <div class="report">
-      <div class="report-bar"><span>taxcite verify memo.md</span><span>sources — irc: 119-110 · reg: 2026-09-08</span></div>
-<pre>| # | Citation                  | Line | Status                          |
-|---|---------------------------|-----:|---------------------------------|
-| 1 | I.R.C. § 162(a)           |   15 | <span class="v">ok: verified, quote_exact</span>       |
-| 2 | I.R.C. § 162(z)           |   46 | <span class="e">ERROR: pinpoint_not_found</span>       |
-<span class="d">    └─ § 162 has subsections (a)–(s); there is no (z)</span>
-| 3 | I.R.C. § 263(a)           |   49 | <span class="e">ERROR: quote_misattributed</span>      |
-<span class="d">    └─ the quoted language appears at I.R.C. § 61(a)</span>
-| 4 | Rev. Rul. 82-204          |   61 | <span class="w">warning: superseded</span>             |
-<span class="d">    └─ Rev. Rul. 2026-3 states that it supersedes this</span>
-| 5 | T.C. Memo. 2099-999       |   70 | <span class="e">ERROR: not_found</span>                |
-<span class="d">    └─ dated 2099, which is in the future</span>
-| 6 | Smith v. Jones, 9 T.C. 1  |   74 | <span class="w">info: unverifiable</span>              |
-<span class="d">    └─ Tax Court coverage is partial; this is not evidence it does not exist</span></pre>
     </div>
   </div>
-</section>
 
-<section id="cases">
-  <div class="shell">
-    <div class="sec-head">
-      <span class="sec-num">04</span>
-      <div>
-        <h2>Checking a quotation <em>without the opinion</em></h2>
-        <p class="sec-sub">The free case-law source publishes metadata, not opinion text. But it will answer a narrower question — <em>does this run of words occur in this decision?</em> — and that is a real verification.</p>
-      </div>
-    </div>
-    <div class="narrow">
-      <p>When a quotation fails, <em>where</em> it fails is the useful part. A passage that matches for seventeen words and then diverges has been misquoted; one that matches for none of them has been invented. A binary search over the opening words separates the two in a handful of requests, and an accurate quotation costs a single one.</p>
-      <p>Two limits are stated in the report rather than left to be discovered. A phrase search normalises punctuation away, so a passage differing only in punctuation passes — and the report says so on every such match. And a decision whose text was never indexed comes back <strong>unverifiable</strong>, never <em>not found</em>: failing to find a passage you never looked for is not evidence.</p>
-    </div>
-  </div>
-</section>
-
-<section id="navigate">
-  <div class="shell">
-    <div class="sec-head">
-      <span class="sec-num">05</span>
-      <div>
-        <h2>A sentence that is <em>mostly defined terms</em></h2>
-        <p class="sec-sub">Some regulations cannot be read straight through. A sentence of the consolidated return rules is built out of terms of art — each defined somewhere else, and reading it without them is reading it wrong.</p>
-      </div>
-    </div>
-
-    <div class="report">
-      <div class="report-bar"><span>taxcite reading-list "Treas. Reg. § 1.1502-21(c)"</span><span>SRLY limitation</span></div>
+  <div class="line" id="read">
+    <div class="no">03</div>
+    <div class="body">
+      <h2>A sentence that is mostly defined terms</h2>
+      <p class="lede">Some regulations cannot be read straight through. A sentence of the consolidated return rules is built out of terms of art, each defined somewhere else.</p>
+      <div class="block">
+        <div class="block-hd"><span>taxcite reading-list "Treas. Reg. &#167; 1.1502-21(c)"</span><span>SRLY limitation</span></div>
 <pre>Terms of art used here, and where they are defined
 
-  SRLY                        <span class="v">Treas. Reg. § 1.1502-1(f)(1)</span>
-  member                      <span class="v">Treas. Reg. § 1.1502-1(b)</span>
-  group                       <span class="v">Treas. Reg. § 1.1502-1(a)</span>
-  consolidated group          <span class="v">Treas. Reg. § 1.1502-1(h)</span>
-  separate return year        <span class="v">Treas. Reg. § 1.1502-1(e)</span>
-  consolidated return year    <span class="v">Treas. Reg. § 1.1502-1(d)</span>
+  SRLY                      <span class="a">Treas. Reg. &#167; 1.1502-1(f)(1)</span>
+  member                    <span class="a">Treas. Reg. &#167; 1.1502-1(b)</span>
+  group                     <span class="a">Treas. Reg. &#167; 1.1502-1(a)</span>
+  consolidated group        <span class="a">Treas. Reg. &#167; 1.1502-1(h)</span>
+  separate return year      <span class="a">Treas. Reg. &#167; 1.1502-1(e)</span>
 
 What this provision sends you to
 
-  1  Treas. Reg. § 1.1502-1(f) — Separate return limitation year
-  1  I.R.C. § 172 — Net operating loss deduction
-  1  I.R.C. § 1503(d) — Dual consolidated loss
-  1  I.R.C. § 163(j) — Limitation on business interest</pre>
-    </div>
-
-    <div class="narrow" style="margin-top:1.75rem">
-      <p><strong>Nothing here is curated.</strong> The cross-references come from the reference graph and the terms from the definitions index, both built from the official text. There is no editorial list of “things to read for SRLY”, because that would be an opinion wearing the clothes of a lookup.</p>
-      <p>Building it exposed a real gap. The eCFR <em>italicises</em> a defined term rather than quoting it, and italics do not survive text extraction — so “The term <em>member</em> means” matched nothing while “The term “consolidated group” means” matched. The most heavily defined corpus in Title 26 had almost none of its own terms indexed. It does now, abbreviations included, because the regulations define SRLY once and then write SRLY everywhere.</p>
+  Treas. Reg. &#167; 1.1502-1(f)  &#8212; Separate return limitation year
+  I.R.C. &#167; 172              &#8212; Net operating loss deduction
+  I.R.C. &#167; 1503(d)          &#8212; Dual consolidated loss</pre>
+      </div>
+      <p style="margin-top:1.1rem"><b>Nothing here is curated.</b> The cross&#8209;references come from the reference graph and the terms from the definitions index, both built from the official text. Building it exposed a real gap: the eCFR <i>italicises</i> a defined term rather than quoting it, and italics do not survive text extraction &#8212; so the most heavily defined corpus in Title 26 had almost none of its own terms indexed.</p>
     </div>
   </div>
-</section>
 
-<section id="compute">
-  <div class="shell">
-    <div class="sec-head">
-      <span class="sec-num">06</span>
-      <div>
-        <h2>What a target's losses are <em>actually worth</em></h2>
-        <p class="sec-sub">One question asked in three parts: what carries over, whether § 382 was triggered, and what the ceiling is if it was. Each is arithmetic or enumeration, and each is traceable to the statute.</p>
-      </div>
-    </div>
-
-    <div class="verdicts">
-      <div class="verdict">
-        <span class="chip ok">§ 381(c)</span>
-        <p class="note" style="font-size:.97rem;margin-bottom:.8rem"><b>What carries over.</b> A closed enumerated list of 23 attributes, plus 3 repealed. Read out of the indexed Code, so it cannot drift from the statute.</p>
-        <p class="note">It does not decide whether your transaction qualifies under § 381(a) — that turns on § 332 or a § 368(a)(1) reorganization, which is characterisation.</p>
-      </div>
-      <div class="verdict">
-        <span class="chip warn">§ 382(g)</span>
-        <p class="note" style="font-size:.97rem;margin-bottom:.8rem"><b>Did a change happen?</b> Each five-percent shareholder measured against their own low point over three years, increases summed, decreases floored at zero.</p>
-        <p class="note">A seller does not offset a buyer — which is why ordinary trading accumulates toward a change nobody intended.</p>
-      </div>
-      <div class="verdict">
-        <span class="chip bad">§ 382(b)</span>
-        <p class="note" style="font-size:.97rem;margin-bottom:.8rem"><b>What the ceiling is.</b> Value times the long-term tax-exempt rate, with the § 382(b)(2) carryforward and § 382(b)(3)(A) short-year proration applied.</p>
-        <p class="note">The rate is not in the Code. It is published monthly in the Bulletin, and TaxCite reads it from there.</p>
-      </div>
-    </div>
-
-    <div class="report" style="margin-top:1.75rem">
-      <div class="report-bar"><span>taxcite model-382 --value 50000000 --change-date 2026-09-15</span><span>workpaper</span></div>
-<pre>| Line                              |        Amount | Authority           |
-| Value of the old loss corporation | $50,000,000.00| <span class="v">I.R.C. § 382(e)(1)</span>  |
-| Long-term tax-exempt rate         |               | <span class="v">I.R.C. § 382(f)</span>     |
-<span class="d">    └─ 3.88% for September 2026, per Rev. Rul. 2026-17 (I.R.B. 2026-37)</span>
-| Base annual limitation            |  $1,940,000.00| <span class="v">I.R.C. § 382(b)(1)</span>  |
-
-| Year | Limitation | Carried in |     Income |   Absorbed | NOL remaining |
-| 2026 | $1,940,000 |         $0 | $1,500,000 | $1,500,000 |   $28,500,000 |
-| 2027 | $2,380,000 |   <span class="w">$440,000</span> | $2,000,000 | $2,000,000 |   $26,500,000 |
-| 2028 | $2,320,000 |   <span class="w">$380,000</span> | $4,000,000 | $2,320,000 |   $24,180,000 |</pre>
-    </div>
-
-    <div class="narrow" style="margin-top:1.75rem">
-      <p>A month whose rate has not been indexed produces <strong>no answer at all</strong> rather than a neighbouring month's rate — § 382(f) keys on the month, and substituting one would change the result invisibly. Built-in gain under § 382(h) and continuity under § 382(c)(1) are accepted as stated inputs and reported as assumptions, never as findings.</p>
-      <p>This is a computation, not a recommendation. It applies a rule to figures you supply and cites the authority for each step. <strong>It does not tell you whether to do the deal.</strong></p>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="shell">
-    <div class="sec-head">
-      <span class="sec-num">07</span>
-      <div>
-        <h2>What it reads</h2>
-        <p class="sec-sub">Official, public-domain government sources only. No proprietary research service is ever scraped, queried, or depended upon.</p>
-      </div>
-    </div>
-
-    <div class="caps">
-      <div class="cap">
-        <span class="k">26 U.S.C.</span>
-        <h3>Internal Revenue Code</h3>
-        <p>The full Title 26 USLM XML from the Office of the Law Revision Counsel, parsed to the subdivision and indexed for full-text search.</p>
-      </div>
-      <div class="cap">
-        <span class="k">26 C.F.R.</span>
-        <h3>Treasury Regulations</h3>
-        <p>Fetched section-by-section from the eCFR and cached, with paragraph hierarchy resolved down through <span style="font-family:var(--mono);font-size:.9em">(b)(2)(i)(A)</span>.</p>
-      </div>
-      <div class="cap">
-        <span class="k">I.R.B.</span>
-        <h3>IRS guidance</h3>
-        <p>Revenue Rulings, Procedures and Notices from the Internal Revenue Bulletin — plus a citator built from the supersede and obsolete relations the Bulletin itself states.</p>
-      </div>
-      <div class="cap">
-        <span class="k">Case law</span>
-        <h3>Federal decisions</h3>
-        <p>Supreme Court, Circuit, Claims and Tax Court decisions through CourtListener, with case names and quoted passages both checked.</p>
-      </div>
-      <div class="cap">
-        <span class="k">§ 1.6662-4</span>
-        <h3>Authority classification</h3>
-        <p>Sorts what you cited into the closed list that counts as “authority” for the substantial-authority standard — and flags what does not count.</p>
-      </div>
-      <div class="cap">
-        <span class="k">Effective dates</span>
-        <h3>Time and amendment</h3>
-        <p>Reads the effective-date formulas buried in statutory notes, so a provision cited for a year it did not govern is reported as an error.</p>
-      </div>
-      <div class="cap">
-        <span class="k">§ 382(f)</span>
-        <h3>Published rates</h3>
-        <p>The long-term tax-exempt rate is not in the Code — it is published monthly in Table 3 of the applicable-federal-rate ruling, and read straight out of the Bulletin.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="limits">
-  <div class="shell">
-    <div class="sec-head">
-      <span class="sec-num">08</span>
-      <div>
-        <h2>What it will <em>not</em> tell you</h2>
-        <p class="sec-sub">The limits are the product. A tool that hedges everything is useless, and one that overclaims is dangerous — so each boundary below is stated in the report itself, not only here.</p>
-      </div>
-    </div>
-
-    <dl class="limits">
-      <div class="limit">
-        <dt>Whether you are right</dt>
-        <dd>TaxCite will happily confirm that a provision exists and is quoted correctly inside an argument that is completely wrong. It has no view on whether an authority supports the proposition it is cited for.</dd>
-      </div>
-      <div class="limit">
-        <dt>Whether a deal works</dt>
-        <dd>The models apply a rule to facts you supply. They do not determine whether an ownership change occurred, whether a transaction qualifies under § 381(a), what a corporation is worth, or whether any of it is advisable. Attribution under § 382(l)(3), public-group segregation under Treas. Reg. § 1.382-2T(j), and net unrealised built-in gain under § 382(h) are <em>not</em> applied, and every report says so.</dd>
-      </div>
-      <div class="limit">
-        <dt>Whether a case is good law</dt>
-        <dd>Reversal, vacatur and abrogation are editorial products, and no free source publishes them. The tempting heuristic was measured and rejected: searching citing opinions for “overruled” returns 119 results for <em>Gregory v. Helvering</em>, which has never been overruled. TaxCite reports citation history instead, which is a fact.</dd>
-      </div>
-      <div class="limit">
-        <dt>Punctuation, in a case quotation</dt>
-        <dd>Matched on words alone unless you supply a CourtListener API token, which makes the comparison character-level and the pinpoint page checkable.</dd>
-      </div>
-      <div class="limit">
-        <dt>That something is missing</dt>
-        <dd>“Not found” is reserved for sources known to be complete. Tax Court coverage is partial, so a Tax Court citation that misses is reported <strong>unverifiable</strong> — a miss is not evidence.</dd>
-      </div>
-      <div class="limit">
-        <dt>State, local or foreign tax</dt>
-        <dd>U.S. federal only. Proposed regulations are not indexed; a <span style="font-family:var(--mono);font-size:.9em">Prop. Treas. Reg.</span> citation resolves against the final regulations, and says so.</dd>
-      </div>
-      <div class="limit">
-        <dt>Anything a professional reviewed</dt>
-        <dd>No part of this project has been audited by a licensed tax practitioner. Treat every capability described here as demonstrated on worked examples, not as a benchmarked result.</dd>
-      </div>
-    </dl>
-  </div>
-</section>
-
-<section>
-  <div class="shell">
-    <div class="sec-head">
-      <span class="sec-num">09</span>
-      <div>
-        <h2>Your draft stays <em>on your machine</em></h2>
-        <p class="sec-sub">With one exception, spelled out plainly because it matters under I.R.C. § 7216 and the ordinary duty of confidentiality.</p>
-      </div>
-    </div>
-    <div class="narrow">
-      <p>The Code and the regulations are held locally, so a quotation from either is checked without a request leaving your computer. Court opinions are not published as a bulk download, so checking a quotation against one means asking whether those words occur in that case — which means sending the words.</p>
-      <p>What is sent is the quoted passage and the reporter citation. What is <em>not</em> sent is your surrounding text, your file, or your client's name. <span style="font-family:var(--mono);font-size:.9em">--no-case-quotes</span> declines it without going offline; <span style="font-family:var(--mono);font-size:.9em">--offline</span> seals the process irreversibly against every outbound request. Setting an API token removes the transmission entirely, by fetching the opinion instead.</p>
-      <p><a href="https://github.com/rakib-nyc/taxcite/blob/main/docs/privacy.md">Read the full privacy statement →</a></p>
-    </div>
-  </div>
-</section>
-
-<section id="install">
-  <div class="shell">
-    <div class="sec-head">
-      <span class="sec-num">10</span>
-      <div>
-        <h2>Install</h2>
-        <p class="sec-sub">Python 3.11 or newer. The index builds in about ten seconds from an eight-megabyte download.</p>
-      </div>
-    </div>
-
-    <div class="steps">
-      <div class="step">
-        <div>
-          <h3>Clone and build the index</h3>
-          <p>Downloads Title 26 from uscode.house.gov and indexes it locally.</p>
-<pre class="block"><span class="p">$</span> git clone https://github.com/rakib-nyc/taxcite.git
-<span class="p">$</span> cd taxcite &amp;&amp; uv sync --all-extras
-<span class="p">$</span> uv run taxcite build-index</pre>
+  <div class="line" id="figure">
+    <div class="no">04</div>
+    <div class="body">
+      <h2>What a target&#8217;s losses are actually worth</h2>
+      <p class="lede">One question asked in three parts. Each part is arithmetic or enumeration, and each is traceable to the statute.</p>
+      <div class="fields three">
+        <div class="field">
+          <p class="cap">&#167; 381(c) &nbsp;&#8212;&nbsp; what carries over</p>
+          <p>A closed enumerated list of 23 attributes, plus 3 repealed. Read out of the indexed Code, so it cannot drift from the statute. It does not decide whether your transaction qualifies under &#167; 381(a).</p>
+        </div>
+        <div class="field">
+          <p class="cap">&#167; 382(g) &nbsp;&#8212;&nbsp; did a change happen</p>
+          <p>Each five&#8209;percent shareholder measured against their own low point over three years, increases summed, decreases floored at zero. A seller does not offset a buyer &#8212; which is why ordinary trading accumulates toward a change nobody intended.</p>
+        </div>
+        <div class="field">
+          <p class="cap">&#167; 382(b) &nbsp;&#8212;&nbsp; what the ceiling is</p>
+          <p>Value times the long&#8209;term tax&#8209;exempt rate. That rate is not in the Code: it is published monthly in the Bulletin, and TaxCite reads it from there.</p>
         </div>
       </div>
-      <div class="step">
-        <div>
-          <h3>Check a draft</h3>
-          <p>The sample memo has deliberately planted errors; every one is caught.</p>
-<pre class="block"><span class="p">$</span> uv run taxcite verify examples/sample_memo.md
-<span class="p">$</span> uv run taxcite verify draft.md --tax-year 2022 --format json</pre>
-        </div>
-      </div>
-      <div class="step">
-        <div>
-          <h3>Navigate and compute</h3>
-          <p>Reading lists over the regulations, and the deal-tax set.</p>
-<pre class="block"><span class="p">$</span> uv run taxcite reading-list "Treas. Reg. § 1.1502-21(c)"
-<span class="p">$</span> uv run taxcite carryover
-<span class="p">$</span> uv run taxcite owner-shift register.csv
-<span class="p">$</span> uv run taxcite model-382 --value 50000000 --change-date 2026-09-15</pre>
-        </div>
-      </div>
-      <div class="step">
-        <div>
-          <h3>Connect it to an AI assistant</h3>
-          <p>TaxCite speaks the Model Context Protocol over stdio, exposing sixteen tools for retrieval, verification and computation.</p>
-<pre class="block"><span class="c"># Claude Code</span>
-<span class="p">$</span> claude mcp add taxcite -- uv --directory /path/to/taxcite run taxcite serve
+      <div class="block" style="margin-top:1.15rem">
+        <div class="block-hd"><span>taxcite owner-shift register.csv</span><span>&#167; 382(g) testing</span></div>
+<pre><span class="f">Ownership change on 2026-03-15</span> &#8212; cumulative owner shift 52.00%,
+over the 50-point threshold of I.R.C. &#167; 382(g)(1).
 
-<span class="c"># Claude Desktop or Cursor — add to the MCP config</span>
-{ "mcpServers": { "taxcite": {
-    "command": "uv",
-    "args": ["--directory", "/path/to/taxcite", "run", "taxcite", "serve"] } } }</pre>
-        </div>
+  Shareholder     Low in window        Now     Increase
+  Fund A                 10.00%     40.00%       30.00%
+  Fund B                  5.00%     27.00%       22.00%
+  Founder                18.00%     18.00%        0.00%
+                                              <span class="f">---------</span>
+                                                 <span class="f">52.00%</span>
+
+<span class="g">Not applied: attribution under &#167; 382(l)(3); public-group segregation
+under Treas. Reg. &#167; 1.382-2T(j); options treated as exercised.</span></pre>
       </div>
     </div>
   </div>
-</section>
 
-<section>
-  <div class="shell">
-    <div class="disclaimer">
-      <p class="k">Please read before relying on this</p>
-      <h2>Experimental research software</h2>
-      <p><strong>TaxCite is an experimental research tool. It is not tax advice, not legal advice, and not a substitute for professional judgment or a commercial citation service.</strong></p>
-      <p>It verifies that cited provisions <strong>exist</strong>, that quoted language <strong>matches</strong> the official source, and computes figures from rules applied to facts <strong>you supply</strong>. It does not judge whether a legal conclusion is correct, whether an authority is on point, whether a decision is still good law, or whether a transaction qualifies for any treatment.</p>
-      <p><strong>No warranty is given.</strong> This software is provided “AS IS”, without warranty or condition of any kind, express or implied, and without any guarantee of accuracy, completeness, currency or fitness for a particular purpose — see sections 7 and 8 of the Apache License 2.0.</p>
-      <p><strong>You are responsible for independently verifying every authority and every figure you rely on.</strong> Do not file, serve or submit work on the strength of this tool alone.</p>
+  <div class="line">
+    <div class="no">05</div>
+    <div class="body">
+      <h2>What it reads</h2>
+      <p class="lede">Official, public&#8209;domain government sources only. No proprietary research service is ever scraped, queried, or depended upon.</p>
+      <div class="fields three">
+        <div class="field"><p class="cap">26 U.S.C.</p><p><b>Internal Revenue Code.</b> Full Title 26 USLM XML from the Office of the Law Revision Counsel, parsed to the subdivision.</p></div>
+        <div class="field"><p class="cap">26 C.F.R.</p><p><b>Treasury Regulations.</b> Fetched per section from the eCFR and cached, with paragraph hierarchy resolved.</p></div>
+        <div class="field"><p class="cap">I.R.B.</p><p><b>IRS guidance.</b> Rulings, Procedures and Notices, plus a citator built from the relations the Bulletin itself states.</p></div>
+        <div class="field"><p class="cap">Case law</p><p><b>Federal decisions</b> through CourtListener, with case names and quoted passages both checked.</p></div>
+        <div class="field"><p class="cap">&#167; 1.6662-4</p><p><b>Authority classification.</b> Sorts what you cited into the closed list that counts for the substantial&#8209;authority standard.</p></div>
+        <div class="field"><p class="cap">&#167; 382(f)</p><p><b>Published rates.</b> Read from Table 3 of the monthly applicable&#8209;federal&#8209;rate ruling, in the Bulletin.</p></div>
+      </div>
     </div>
   </div>
-</section>
+
+  <div class="line" id="limits">
+    <div class="no">06</div>
+    <div class="body">
+      <h2>What it will not tell you</h2>
+      <p class="lede">The limits are the product. A tool that hedges everything is useless, and one that overclaims is dangerous &#8212; so each boundary below is stated in the report itself, not only here.</p>
+      <dl class="defs">
+        <div><dt>Whether you are right</dt><dd>It will confirm that a provision exists and is quoted correctly inside an argument that is completely wrong. It has no view on whether an authority supports the proposition it is cited for.</dd></div>
+        <div><dt>Whether a deal works</dt><dd>The models apply a rule to facts you supply. They do not determine whether an ownership change occurred, whether a transaction qualifies under &#167; 381(a), what a corporation is worth, or whether any of it is advisable.</dd></div>
+        <div><dt>Whether a case is good law</dt><dd>Reversal and abrogation are editorial products, and no free source publishes them. The tempting heuristic was measured and rejected: searching citing opinions for &#8220;overruled&#8221; returns 119 results for <i>Gregory v. Helvering</i>, which has never been overruled.</dd></div>
+        <div><dt>That something is missing</dt><dd>&#8220;Not found&#8221; is reserved for sources known to be complete. Tax Court coverage is partial, so a Tax Court citation that misses is reported <b>unverifiable</b> &#8212; a miss is not evidence.</dd></div>
+        <div><dt>Anything a professional reviewed</dt><dd>No part of this project has been audited by a licensed tax practitioner. Treat every capability described here as demonstrated on worked examples, not as a benchmarked result.</dd></div>
+      </dl>
+    </div>
+  </div>
+
+  <div class="line">
+    <div class="no">07</div>
+    <div class="body">
+      <h2>Your draft stays on your machine</h2>
+      <p class="lede">With one exception, spelled out plainly because it matters under I.R.C. &#167; 7216 and the ordinary duty of confidentiality.</p>
+      <p>The Code and the regulations are held locally, so a quotation from either is checked without a request leaving your computer. Court opinions are not published as a bulk download, so checking a quotation against one means asking whether those words occur in that case &#8212; which means sending the words.</p>
+      <p>What is sent is the quoted passage and the reporter citation. What is <i>not</i> sent is your surrounding text, your file, or your client&#8217;s name. <code>--no-case-quotes</code> declines it without going offline; <code>--offline</code> seals the process irreversibly against every outbound request. <a href="https://github.com/rakib-nyc/taxcite/blob/main/docs/privacy.md">Read the full privacy statement.</a></p>
+    </div>
+  </div>
+
+  <div class="line" id="install">
+    <div class="no">08</div>
+    <div class="body">
+      <h2>Install</h2>
+      <p class="lede">Python 3.11 or newer. The index builds in about ten seconds from an eight&#8209;megabyte download.</p>
+      <div class="block">
+        <div class="block-hd"><span>shell</span><span>setup</span></div>
+<pre><span class="a">$</span> git clone https://github.com/rakib-nyc/taxcite.git
+<span class="a">$</span> cd taxcite &amp;&amp; uv sync --all-extras
+<span class="a">$</span> uv run taxcite build-index
+
+<span class="g"># check a draft, then navigate and compute</span>
+<span class="a">$</span> uv run taxcite verify examples/sample_memo.md
+<span class="a">$</span> uv run taxcite reading-list "Treas. Reg. &#167; 1.1502-21(c)"
+<span class="a">$</span> uv run taxcite carryover
+<span class="a">$</span> uv run taxcite owner-shift register.csv
+
+<span class="g"># or give the sixteen tools to an assistant over MCP</span>
+<span class="a">$</span> claude mcp add taxcite -- uv --directory /path/to/taxcite run taxcite serve</pre>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<div class="shell" style="padding:2.25rem 0 2.75rem">
+  <div class="notice">
+    <h2>Experimental research software</h2>
+    <p><b>TaxCite is not tax advice, not legal advice, and not a substitute for professional judgment or a commercial tax service.</b></p>
+    <p>It verifies that cited provisions <b>exist</b>, that quoted language <b>matches</b> the official source, and computes figures from rules applied to facts <b>you supply</b>. It does not judge whether a legal conclusion is correct, whether an authority is on point, whether a decision is still good law, or whether a transaction qualifies for any treatment.</p>
+    <p><b>No warranty is given.</b> Provided &#8220;AS IS&#8221;, without warranty or condition of any kind, express or implied, and without any guarantee of accuracy, completeness, currency or fitness for a particular purpose &#8212; see sections 7 and 8 of the Apache License 2.0.</p>
+    <p><b>You are responsible for independently verifying every authority and every figure you rely on.</b> Do not file, serve or submit work on the strength of this tool alone.</p>
+  </div>
+</div>
 
 </main>
 
 <footer>
   <div class="shell foot">
     <div>
-      <a class="wordmark" href="#top" style="font-size:1.4rem"><span class="sec">§</span>TaxCite</a>
-      <p class="colophon">Verify, navigate and compute U.S. federal tax law.<br>
-      Copyright © 2026 <a href="mailto:rakib.islam@rutgers.edu">Muhammad Rakibul Islam</a>. Released under the Apache License 2.0.</p>
-      <p class="colophon">Statutory, regulatory and judicial texts are works of the United States government and are in the public domain (17 U.S.C. § 105).</p>
+      <a class="mark" href="#top"><b>TaxCite</b></a>
+      <p class="fine">Verify, navigate and compute U.S. federal tax law. Copyright &copy; 2026 <a href="mailto:rakib.islam@rutgers.edu">Muhammad Rakibul Islam</a>. Released under the Apache License 2.0.</p>
+      <p class="fine">Statutory, regulatory and judicial texts are works of the United States government and are in the public domain (17 U.S.C. &#167; 105).</p>
     </div>
     <div>
       <h4>Project</h4>
       <ul>
         <li><a href="https://github.com/rakib-nyc/taxcite">Source code</a></li>
         <li><a href="https://github.com/rakib-nyc/taxcite/issues">Report an issue</a></li>
+        <li><a href="https://github.com/rakib-nyc/taxcite/releases">Releases</a></li>
         <li><a href="https://github.com/rakib-nyc/taxcite/blob/main/LICENSE">Apache 2.0 licence</a></li>
         <li><a href="https://github.com/rakib-nyc/taxcite/blob/main/docs/privacy.md">Privacy statement</a></li>
-        <li><a href="https://github.com/rakib-nyc/taxcite/releases">Releases</a></li>
-        <li><a href="https://github.com/rakib-nyc/taxcite/blob/main/docs/citation-grammar.md">Citation grammar</a></li>
       </ul>
     </div>
     <div>
       <h4>Sources</h4>
       <ul>
-        <li><a href="https://uscode.house.gov/">Office of the Law Revision Counsel</a></li>
+        <li><a href="https://uscode.house.gov/">Law Revision Counsel</a></li>
         <li><a href="https://www.ecfr.gov/">Electronic CFR</a></li>
         <li><a href="https://www.irs.gov/irb">Internal Revenue Bulletin</a></li>
         <li><a href="https://www.courtlistener.com/">CourtListener</a></li>
@@ -845,9 +572,7 @@ What this provision sends you to
 
 <script>
 (function () {
-  var btn = document.getElementById('theme');
-  var root = document.documentElement;
-  var saved = null;
+  var btn = document.getElementById('theme'), root = document.documentElement, saved = null;
   try { saved = localStorage.getItem('taxcite-theme'); } catch (e) {}
   if (saved === 'dark' || saved === 'light') root.setAttribute('data-theme', saved);
   btn.addEventListener('click', function () {
