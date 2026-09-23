@@ -1,12 +1,13 @@
-# TaxCite — verify tax law citations in AI-drafted writing
+# TaxCite — verify, navigate and compute U.S. federal tax law
 
-**Catch fabricated citations, misquoted statutes, and invented case law in U.S.
-federal tax writing — against the official government sources.**
+**Check what a draft cites, find what governs a question, and compute what follows —
+with every answer traced to published government authority.**
 
 [![CI](https://github.com/rakib-nyc/taxcite/actions/workflows/ci.yml/badge.svg)](https://github.com/rakib-nyc/taxcite/actions/workflows/ci.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
-[![MCP](https://img.shields.io/badge/MCP-server-orange.svg)](https://modelcontextprotocol.io/)
+[![MCP](https://img.shields.io/badge/MCP-16%20tools-orange.svg)](https://modelcontextprotocol.io/)
+[![Tests](https://img.shields.io/badge/tests-1055-brightgreen.svg)](tests/)
 [![Website](https://img.shields.io/badge/docs-rakib--nyc.github.io%2Ftaxcite-1f6feb.svg)](https://rakib-nyc.github.io/taxcite/)
 
 **[Website](https://rakib-nyc.github.io/taxcite/)** ·
@@ -15,31 +16,38 @@ federal tax writing — against the official government sources.**
 **[Citation grammar](docs/citation-grammar.md)**
 
 TaxCite is a [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) server
-and a command-line tool for **tax law citation verification**. It retrieves the
-**Internal Revenue Code** (26 U.S.C.), **Treasury Regulations** (26 C.F.R.), IRS
-guidance from the Internal Revenue Bulletin, and federal **case law**, and it checks
-the citations and quotations in AI-drafted tax memoranda against those sources.
+and a command-line tool for U.S. federal tax work. It reads the **Internal Revenue
+Code**, **Treasury Regulations**, IRS guidance from the **Internal Revenue Bulletin**
+and federal **case law**, and does three things with them:
+
+| | | |
+|---|---|---|
+| **Verify** | Is this citation real? Is this quotation verbatim? Does this authority count? | `verify` `check_case` `authority` |
+| **Navigate** | What must I read to understand this? What do its terms of art mean? | `reading-list` `closure` `define` `xrefs` |
+| **Compute** | What does the law say this number is, and where does that number come from? | `model-382` `owner-shift` `carryover` |
 
 It exists because large language models are fluent in the *register* of tax law and
-unreliable about its *content*. TaxCite is a **hallucination detector for tax
-citations**: it tells you which citations are real, which quotations are verbatim, and
-— just as importantly — which it could not check.
+unreliable about its *content*, and because the same is true of anyone working fast
+from memory. Every answer names the provision that authorises it — and says plainly
+what it could not check.
 
 > ### ⚠️ Experimental research software — read this first
 >
 > **TaxCite is an experimental research tool. It is not tax advice, not legal advice,
-> and not a substitute for professional judgment or a commercial citation service.**
+> and not a substitute for professional judgment or a commercial tax service.**
 >
-> It verifies that cited provisions **exist** and that quoted language **matches** the
-> official source. It does **not** judge whether a legal conclusion is correct, whether
-> an authority is on point, or whether a decision is still good law.
+> It verifies that cited provisions **exist**, that quoted language **matches** the
+> official source, and computes figures from **rules you supply facts to**. It does
+> **not** judge whether a legal conclusion is correct, whether an authority is on
+> point, whether a decision is still good law, or whether a transaction qualifies for
+> any treatment.
 >
 > **No warranty.** This software is provided "AS IS", without warranty or condition of
 > any kind, express or implied, and without any guarantee of accuracy, completeness,
 > currency, or fitness for a particular purpose. See the
 > [Apache License 2.0](LICENSE), sections 7 and 8. **You are responsible for
-> independently verifying every authority you rely on.** Do not file, serve, or submit
-> work on the strength of this tool alone.
+> independently verifying every authority and every figure you rely on.** Do not file,
+> serve, or submit work on the strength of this tool alone.
 
 ## Why
 
@@ -117,7 +125,10 @@ uv run python scripts/smoke_test_mcp.py
 | `search_tax_law` | Full-text search across the Code and the regulations |
 | `resolve_citation` | Parse a citation and say whether it exists |
 | `check_case` | Look up a decision, and check a passage before quoting it |
+| `reading_list` | What to read for a provision, and what its terms of art mean |
 | `model_section_382` | Compute an I.R.C. § 382 limitation, citing every input |
+| `test_ownership_change` | Test a shareholder register under I.R.C. § 382(g) |
+| `attribute_carryover` | The I.R.C. § 381(c) attributes, and what limits them |
 | `verify_citations` | Check a whole draft and return a report |
 | `get_cross_references` | What a provision cites, and what cites it |
 | `find_definition` | Where a term is defined, and what scope the definition has |
@@ -156,6 +167,11 @@ taxcite diff "§ 163(j)" --from 2017-06-30 [--to YYYY-MM-DD]
 taxcite xrefs "§ 1411" [--direction outgoing|incoming|both]
 taxcite closure "§ 163(j)" [--depth 2] [--limit 25]
 taxcite define "gross income" [--at "§ 162(a)"]
+taxcite reading-list "Treas. Reg. § 1.1502-21(c)" [--depth 2] [--tax-year 2026]
+taxcite model-382 --value 50000000 --change-date 2026-09-15 [--nol N] [--years N]
+               [--income A,B,C] [--rbig N] [--short-year-days N] [--no-continuity]
+taxcite owner-shift register.csv [--json]
+taxcite carryover
 taxcite serve
 taxcite version
 ```
@@ -345,6 +361,22 @@ A case cited a thousand times and again last month is alive. One last cited in 1
 deserves a look before you rely on it. Neither is a treatment determination, and
 TaxCite does not dress it up as one.
 
+## Deal tax: three things you need before you price a target's losses
+
+The three features below were built together because in practice they are one
+question asked in three parts. A buyer wants to know what a target's tax attributes
+are worth. That requires knowing **what carries over** (§ 381), **whether an ownership
+change has happened** (§ 382(g)), and **what the limitation is if it has** (§ 382(b)).
+Each answer is arithmetic or enumeration, and each is traceable to the statute.
+
+```bash
+taxcite carryover                          # what comes across at all
+taxcite owner-shift register.csv           # did § 382 get triggered
+taxcite model-382 --value … --change-date … # what the annual ceiling is
+```
+
+None of them tells you whether to do the deal.
+
 ## Reading the consolidated return regulations
 
 Some regulations are almost entirely terms of art. A sentence of
@@ -446,6 +478,41 @@ the result.
 
 That is the line this project draws everywhere: it can tell you what the law says a
 number is; it cannot tell you what to do about it.
+
+## What actually carries over in an acquisition
+
+§ 381(c) is a **closed enumerated list** of the tax attributes an acquiring
+corporation succeeds to. What is on it is on it; what is not does not carry over by
+virtue of that section. Three of its items are repealed, which is easy to miss.
+
+```bash
+uv run taxcite carryover
+```
+
+```
+§ 381(c) enumerates 23 attributes, plus 3 repealed items.
+
+| § 381(c) | Attribute                                   |
+| (1)      | Net operating loss carryovers               |
+| (2)      | Earnings and profits                        |
+| (20)     | Carryforward of disallowed business interest|
+…
+| Provision                  | Bears on     |
+| I.R.C. § 382               | (1), (3), (20)  |
+| I.R.C. § 383               | (3), (24), (25) |
+| Treas. Reg. § 1.1502-21(c) | (1)             |
+```
+
+**The list is read out of the indexed Code, not typed into this project.** That is the
+whole point: a curated checklist drifts from the statute, and this one cannot, because
+the enumeration, the headings and the repeals are the Code's own. The limitation
+cross-references are signposts to further reading, not findings that a limitation
+applies — whether § 382 bites depends on whether an ownership change occurred, which
+is what `owner-shift` is for.
+
+It does not decide whether your transaction qualifies under § 381(a). That turns on
+whether § 332 applies, or whether a transfer is in connection with a reorganization
+described in § 368(a)(1)(A), (C), (D), (F) or (G) — questions of characterisation.
 
 ## Revenue Rulings, and whether they are still alive
 
@@ -633,6 +700,15 @@ More detail, including where the live sources differ from the spec, is in
 - **Existence and accuracy, not correctness.** TaxCite will happily confirm that a
   provision exists and is quoted correctly inside an argument that is completely wrong.
   It has no view on whether an authority supports the proposition it is cited for.
+- **Computation, not planning.** The models apply a rule to facts you supply. They do
+  not determine whether an ownership change occurred, whether a transaction qualifies
+  under § 381(a), what a corporation is worth, or whether any of it is a good idea.
+  Each report lists the rules it did *not* apply — attribution under § 382(l)(3),
+  public-group segregation under Treas. Reg. § 1.382-2T(j), net unrealised built-in
+  gain under § 382(h) — because a number that precise invites more trust than the
+  inputs deserve.
+- **No state, local or foreign tax**, no entity-level modelling, no return preparation,
+  and no provision (ASC 740) computation.
 - **No treatment check on cases.** Whether a decision was reversed, vacated, or
   overruled is not checked and cannot be, from a free source. Every report says so.
 - **Case quotations are matched on words, not characters,** unless you supply a

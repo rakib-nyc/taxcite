@@ -951,3 +951,22 @@ def owner_shift_command(
         )
         return
     print(ownership.to_markdown(report))
+
+
+@app.command("carryover")
+def carryover_command() -> None:
+    """List the attributes I.R.C. § 381(c) carries over, and what limits them.
+
+    Read out of the indexed Code rather than curated, so the enumeration and the
+    repeals are the statute's own. It does not decide whether your transaction
+    qualifies under § 381(a) — that is a question of characterisation.
+    """
+    from taxcite.model import carryover
+
+    with api.open_index() as connection:
+        checklist = carryover.build(connection)
+    if checklist is None:
+        raise ConfigurationError(
+            "I.R.C. § 381 is not in the index", hint="Run `taxcite build-index` first."
+        )
+    print(carryover.to_markdown(checklist))

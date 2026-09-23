@@ -464,6 +464,28 @@ def test_ownership_change(register: str) -> str:
 
 @mcp.tool()
 @friendly
+def attribute_carryover() -> str:
+    """List the tax attributes I.R.C. § 381(c) carries over in a corporate acquisition.
+
+    Use this when a question involves what survives a merger, a § 332 liquidation, or
+    an asset reorganization. § 381(c) is a closed enumerated list — an attribute not on
+    it does not carry over by virtue of that section — and three of its items are
+    repealed, which is easy to miss.
+
+    The list is read out of the indexed Code, so it reflects the statute as enacted
+    rather than a remembered summary.
+    """
+    from taxcite.model import carryover
+
+    with _index() as connection:
+        checklist = carryover.build(connection)
+        if checklist is None:
+            return "I.R.C. § 381 is not in the index."
+        return carryover.to_markdown(checklist)
+
+
+@mcp.tool()
+@friendly
 def get_cross_references(citation: str, direction: str = "both") -> str:
     """List what a provision cites, and what cites it.
 

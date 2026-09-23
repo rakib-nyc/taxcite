@@ -44,6 +44,7 @@ EXPECTED_TOOLS = {
     "model_section_382",
     "reading_list",
     "test_ownership_change",
+    "attribute_carryover",
     "verify_citations",
     "get_cross_references",
     "find_definition",
