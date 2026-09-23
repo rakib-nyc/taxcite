@@ -883,3 +883,71 @@ def reading_list_command(
             hint="Run `taxcite build-index --regs 1` to add the regulations.",
         )
     print(readinglist.to_markdown(reading))
+
+
+@app.command("owner-shift")
+def owner_shift_command(
+    register: Annotated[
+        Path,
+        typer.Argument(
+            help=(
+                "A CSV of date,shareholder,percent rows — a shareholder register. "
+                "Use - for standard input."
+            )
+        ),
+    ],
+    as_json: Annotated[bool, typer.Option("--json", help="Emit JSON.")] = False,
+) -> None:
+    """Test a shareholder register for an ownership change under I.R.C. § 382(g).
+
+    Measures each five-percent shareholder against their own low point in the
+    three-year testing period and sums the increases. Arithmetic over the register
+    you supply, not a § 382 opinion: attribution, public-group segregation and
+    options are not applied, and the report says so.
+    """
+    import csv
+    import io
+    import json as json_lib
+
+    from taxcite.model import ownership
+
+    text = sys.stdin.read() if str(register) == "-" else _read(register)
+    rows: list[tuple[str, str, float | str]] = []
+    for line, fields in enumerate(csv.reader(io.StringIO(text)), start=1):
+        cleaned = [f.strip() for f in fields if f.strip()]
+        if not cleaned or cleaned[0].lower().startswith(("date", "#")):
+            continue
+        if len(cleaned) < 3:
+            raise ConfigurationError(
+                f"line {line}: expected date,shareholder,percent",
+                hint="Each row needs three fields, e.g. 2024-06-30,Fund A,30.",
+            )
+        rows.append((cleaned[0], cleaned[1], cleaned[2]))
+    try:
+        holdings = ownership.parse_register(rows)
+    except ValueError as exc:
+        raise ConfigurationError(
+            str(exc), hint="Dates are YYYY-MM-DD; percents are 0-100."
+        ) from exc
+
+    report = ownership.analyse(holdings)
+    if as_json:
+        console.print_json(
+            json_lib.dumps(
+                {
+                    "ownership_change": report.change.when.isoformat() if report.change else None,
+                    "testing_dates": [
+                        {
+                            "date": entry.when.isoformat(),
+                            "window_from": entry.window_from.isoformat(),
+                            "owner_shift": float(entry.total_increase),
+                            "is_ownership_change": entry.is_ownership_change,
+                        }
+                        for entry in report.dates
+                    ],
+                    "caveats": report.caveats,
+                }
+            )
+        )
+        return
+    print(ownership.to_markdown(report))

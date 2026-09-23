@@ -430,6 +430,40 @@ def reading_list(
 
 @mcp.tool()
 @friendly
+def test_ownership_change(register: str) -> str:
+    """Test a shareholder register for an ownership change under I.R.C. § 382(g).
+
+    Run this before computing a § 382 limitation: the limitation only applies if an
+    ownership change has occurred, and whether one has is arithmetic over a register
+    rather than a judgment call.
+
+    Args:
+        register: CSV rows of ``date,shareholder,percent`` — one row per holding per
+            date, dates as YYYY-MM-DD. Percentages must already reflect any public
+            group aggregation; this does not perform it.
+    """
+    import csv
+    import io
+
+    from taxcite.model import ownership
+
+    rows: list[tuple[str, str, float | str]] = []
+    for fields in csv.reader(io.StringIO(register)):
+        cleaned = [f.strip() for f in fields if f.strip()]
+        if not cleaned or cleaned[0].lower().startswith(("date", "#")):
+            continue
+        if len(cleaned) < 3:
+            return "Each row needs date,shareholder,percent — e.g. 2024-06-30,Fund A,30."
+        rows.append((cleaned[0], cleaned[1], cleaned[2]))
+    try:
+        holdings = ownership.parse_register(rows)
+    except ValueError as exc:
+        return f"Could not read the register: {exc}"
+    return ownership.to_markdown(ownership.analyse(holdings))
+
+
+@mcp.tool()
+@friendly
 def get_cross_references(citation: str, direction: str = "both") -> str:
     """List what a provision cites, and what cites it.
 

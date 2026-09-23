@@ -370,6 +370,38 @@ terms from the definitions index, both built from the official text — there is
 editorial list of "things to read for SRLY", because that would be an opinion wearing
 the clothes of a lookup.
 
+## Did an ownership change even happen?
+
+The § 382 limitation only applies if there has been an **ownership change**, and
+whether there has is arithmetic over a shareholder register, not a judgment call.
+§ 382(g)(1) asks whether five-percent shareholders have increased their holdings by
+more than 50 percentage points over their lowest point in the three-year testing
+period.
+
+```bash
+uv run taxcite owner-shift register.csv     # date,shareholder,percent
+```
+
+```
+**Ownership change on 2026-03-15** — cumulative owner shift 52.00%,
+over the 50-point threshold of I.R.C. § 382(g)(1).
+
+| Shareholder  | Low in window | On         | Now    | Increase |
+| Fund A       |        10.00% | 2023-01-01 | 40.00% |   30.00% |
+| Fund B       |         5.00% | 2023-01-01 | 27.00% |   22.00% |
+| Founder      |        18.00% | 2026-03-15 | 18.00% |    0.00% |
+```
+
+Two details do most of the work in real cases, and both are implemented: the
+comparison is **shareholder by shareholder** against each one's own low point, and a
+decrease is **floored at zero** — the founder selling down does not offset the funds
+buying in. That is why ordinary trading accumulates toward a change nobody intended.
+Increases older than three years drop out as the window rolls forward.
+
+It does not apply attribution under § 382(l)(3), does not segregate or aggregate
+public groups under Treas. Reg. § 1.382-2T(j), and does not treat options as
+exercised. Every report says so.
+
 ## Tax modelling — computation, not advice
 
 Some numbers a tax memo depends on are not in the Code at all. The one that matters
