@@ -9,7 +9,10 @@ federal tax writing — against the official government sources.**
 [![MCP](https://img.shields.io/badge/MCP-server-orange.svg)](https://modelcontextprotocol.io/)
 [![Website](https://img.shields.io/badge/docs-rakib--nyc.github.io%2Ftaxcite-1f6feb.svg)](https://rakib-nyc.github.io/taxcite/)
 
-**[Website and documentation →](https://rakib-nyc.github.io/taxcite/)**
+**[Website](https://rakib-nyc.github.io/taxcite/)** ·
+**[Technical overview](docs/technical-overview.md)** ·
+**[Privacy](docs/privacy.md)** ·
+**[Citation grammar](docs/citation-grammar.md)**
 
 TaxCite is a [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) server
 and a command-line tool for **tax law citation verification**. It retrieves the
