@@ -42,7 +42,12 @@ def test_release_point_discovery(client: HttpClient) -> None:
 
 
 def test_user_agent_names_the_repository(client: HttpClient) -> None:
-    assert "github.com/taxcite" in client.client.headers["User-Agent"]
+    """Government servers see this, so it must name the real repository."""
+    from taxcite.config import REPO_URL
+
+    agent = client.client.headers["User-Agent"]
+    assert REPO_URL in agent
+    assert "rakib-nyc/taxcite" in agent
 
 
 # --------------------------------------------------------------------------------------

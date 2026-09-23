@@ -185,3 +185,16 @@ def test_the_published_tree_includes_what_a_user_needs() -> None:
     published = {path.relative_to(ROOT).as_posix() for path in _published_files()}
     for needed in ("README.md", "LICENSE", "pyproject.toml", "docs/privacy.md"):
         assert needed in published, needed
+
+
+def test_the_user_agent_names_the_published_repository() -> None:
+    """A stale placeholder here is invisible: government servers see it, not us.
+
+    This lived only in a network-marked test, so it stayed green in CI while the
+    User-Agent still named a repository that does not exist.
+    """
+    from taxcite.config import REPO_URL, USER_AGENT
+
+    assert REPO_URL == "https://github.com/rakib-nyc/taxcite"
+    assert REPO_URL in USER_AGENT
+    assert "taxcite/" in USER_AGENT
