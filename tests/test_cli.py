@@ -280,7 +280,11 @@ def test_serve_is_registered() -> None:
 
 def test_verify_help_says_what_case_quote_checking_sends() -> None:
     """A reader must be able to find the transmission without reading the source."""
-    result = runner.invoke(app, ["verify", "--help"])
+    # Pin the width: the help text is boxed and wrapped to the terminal, so a narrow
+    # one (a CI runner's, say) truncates the very flag this is checking for.
+    result = runner.invoke(
+        app, ["verify", "--help"], env={"COLUMNS": "200", "NO_COLOR": "1", "TERM": "dumb"}
+    )
     assert result.exit_code == 0
     output = " ".join(result.stdout.split())
     assert "--no-case-quotes" in output
