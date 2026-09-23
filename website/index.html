@@ -277,6 +277,32 @@ h2 em { font-style: italic; color: var(--claret); }
 .report .w { color: var(--caution); }
 .report .d { color: var(--ink-3); }
 
+/* ---- the three questions, each shown rather than described -------------- */
+.trio { display: grid; gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+@media (min-width: 60rem) { .trio { grid-template-columns: repeat(3, 1fr); } }
+.trio article { background: var(--paper); padding: 1.6rem 1.5rem 1.7rem; display: flex; flex-direction: column; }
+.trio .k {
+  font-family: var(--mono); font-size: .66rem; letter-spacing: .13em;
+  text-transform: uppercase; color: var(--claret); display: block; margin-bottom: .75rem;
+}
+.trio h3 {
+  font-family: var(--body); font-weight: 600; font-size: 1.08rem;
+  margin: 0 0 1.05rem; letter-spacing: -.006em; line-height: 1.32;
+}
+.mini {
+  background: var(--paper-2); border: 1px solid var(--rule-soft);
+  padding: .8rem .85rem; margin-bottom: 1.05rem; overflow-x: auto;
+}
+.mini pre {
+  margin: 0; font-family: var(--mono); font-size: .715rem; line-height: 1.7;
+  white-space: pre; color: var(--ink);
+}
+.mini .v { color: var(--verified); }
+.mini .e { color: var(--error); }
+.mini .w { color: var(--caution); }
+.mini .d { color: var(--ink-3); }
+.trio article > p { margin: auto 0 0; font-size: .93rem; color: var(--ink-2); line-height: 1.55; }
+
 /* ---- grid of capabilities ---------------------------------------------- */
 .caps { display: grid; gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
 @media (min-width: 40rem) { .caps { grid-template-columns: 1fr 1fr; } }
@@ -397,26 +423,50 @@ footer { border-top: 1px solid var(--rule); padding: 3rem 0 3.5rem; }
     <div class="sec-head">
       <span class="sec-num">01</span>
       <div>
-        <h2>Three things, one <em>discipline</em></h2>
-        <p class="sec-sub">Each answers a different question a tax reviewer actually asks. All three answer it the same way: from official text, with the provision named, and with the limits stated rather than left to be discovered.</p>
+        <h2>Three questions, one <em>discipline</em></h2>
+        <p class="sec-sub">Different questions, answered the same way: from official text, with the provision named, and with the limits stated rather than left to be discovered.</p>
       </div>
     </div>
-    <div class="caps">
-      <div class="cap">
+
+    <div class="trio">
+      <article>
         <span class="k">Verify</span>
         <h3>Is this real, and is it quoted right?</h3>
+        <div class="mini">
+<pre>§ 162(a)   <span class="v">ok: verified, quote_exact</span>
+§ 162(z)   <span class="e">ERROR: pinpoint_not_found</span>
+<span class="d">           § 162 has (a)–(s); no (z)</span>
+§ 263(a)   <span class="e">ERROR: quote_misattributed</span>
+<span class="d">           appears at § 61(a)</span></pre>
+        </div>
         <p>Citations, quotations, pinpoint pages, case names, whether an authority counts under Treas. Reg. § 1.6662-4, and whether a ruling has been superseded.</p>
-      </div>
-      <div class="cap">
+      </article>
+
+      <article>
         <span class="k">Navigate</span>
         <h3>What must I read, and what do the words mean?</h3>
+        <div class="mini">
+<pre>Treas. Reg. § 1.1502-21(c)
+
+SRLY      <span class="v">§ 1.1502-1(f)(1)</span>
+member    <span class="v">§ 1.1502-1(b)</span>
+group     <span class="v">§ 1.1502-1(a)</span>
+<span class="d">+ 12 provisions it sends you to</span></pre>
+        </div>
         <p>Reading lists that give both halves — the cross-references and the terms of art — for the corners of the regulations where a sentence is mostly defined terms.</p>
-      </div>
-      <div class="cap">
+      </article>
+
+      <article>
         <span class="k">Compute</span>
         <h3>What does the law say this number is?</h3>
+        <div class="mini">
+<pre>Value      $50,000,000  <span class="v">§ 382(e)(1)</span>
+Rate             3.88%  <span class="v">§ 382(f)</span>
+<span class="d">           Rev. Rul. 2026-17</span>
+<span class="w">Limitation  $1,940,000</span>  <span class="v">§ 382(b)(1)</span></pre>
+        </div>
         <p>The § 382 limitation, § 382(g) owner shift testing, and § 381 attribute carryover — each line labelled with the provision that authorises it.</p>
-      </div>
+      </article>
     </div>
   </div>
 </section>
@@ -480,10 +530,111 @@ footer { border-top: 1px solid var(--rule); padding: 3rem 0 3.5rem; }
   </div>
 </section>
 
-<section>
+<section id="cases">
   <div class="shell">
     <div class="sec-head">
       <span class="sec-num">04</span>
+      <div>
+        <h2>Checking a quotation <em>without the opinion</em></h2>
+        <p class="sec-sub">The free case-law source publishes metadata, not opinion text. But it will answer a narrower question — <em>does this run of words occur in this decision?</em> — and that is a real verification.</p>
+      </div>
+    </div>
+    <div class="narrow">
+      <p>When a quotation fails, <em>where</em> it fails is the useful part. A passage that matches for seventeen words and then diverges has been misquoted; one that matches for none of them has been invented. A binary search over the opening words separates the two in a handful of requests, and an accurate quotation costs a single one.</p>
+      <p>Two limits are stated in the report rather than left to be discovered. A phrase search normalises punctuation away, so a passage differing only in punctuation passes — and the report says so on every such match. And a decision whose text was never indexed comes back <strong>unverifiable</strong>, never <em>not found</em>: failing to find a passage you never looked for is not evidence.</p>
+    </div>
+  </div>
+</section>
+
+<section id="navigate">
+  <div class="shell">
+    <div class="sec-head">
+      <span class="sec-num">05</span>
+      <div>
+        <h2>A sentence that is <em>mostly defined terms</em></h2>
+        <p class="sec-sub">Some regulations cannot be read straight through. A sentence of the consolidated return rules is built out of terms of art — each defined somewhere else, and reading it without them is reading it wrong.</p>
+      </div>
+    </div>
+
+    <div class="report">
+      <div class="report-bar"><span>taxcite reading-list "Treas. Reg. § 1.1502-21(c)"</span><span>SRLY limitation</span></div>
+<pre>Terms of art used here, and where they are defined
+
+  SRLY                        <span class="v">Treas. Reg. § 1.1502-1(f)(1)</span>
+  member                      <span class="v">Treas. Reg. § 1.1502-1(b)</span>
+  group                       <span class="v">Treas. Reg. § 1.1502-1(a)</span>
+  consolidated group          <span class="v">Treas. Reg. § 1.1502-1(h)</span>
+  separate return year        <span class="v">Treas. Reg. § 1.1502-1(e)</span>
+  consolidated return year    <span class="v">Treas. Reg. § 1.1502-1(d)</span>
+
+What this provision sends you to
+
+  1  Treas. Reg. § 1.1502-1(f) — Separate return limitation year
+  1  I.R.C. § 172 — Net operating loss deduction
+  1  I.R.C. § 1503(d) — Dual consolidated loss
+  1  I.R.C. § 163(j) — Limitation on business interest</pre>
+    </div>
+
+    <div class="narrow" style="margin-top:1.75rem">
+      <p><strong>Nothing here is curated.</strong> The cross-references come from the reference graph and the terms from the definitions index, both built from the official text. There is no editorial list of “things to read for SRLY”, because that would be an opinion wearing the clothes of a lookup.</p>
+      <p>Building it exposed a real gap. The eCFR <em>italicises</em> a defined term rather than quoting it, and italics do not survive text extraction — so “The term <em>member</em> means” matched nothing while “The term “consolidated group” means” matched. The most heavily defined corpus in Title 26 had almost none of its own terms indexed. It does now, abbreviations included, because the regulations define SRLY once and then write SRLY everywhere.</p>
+    </div>
+  </div>
+</section>
+
+<section id="compute">
+  <div class="shell">
+    <div class="sec-head">
+      <span class="sec-num">06</span>
+      <div>
+        <h2>What a target's losses are <em>actually worth</em></h2>
+        <p class="sec-sub">One question asked in three parts: what carries over, whether § 382 was triggered, and what the ceiling is if it was. Each is arithmetic or enumeration, and each is traceable to the statute.</p>
+      </div>
+    </div>
+
+    <div class="verdicts">
+      <div class="verdict">
+        <span class="chip ok">§ 381(c)</span>
+        <p class="note" style="font-size:.97rem;margin-bottom:.8rem"><b>What carries over.</b> A closed enumerated list of 23 attributes, plus 3 repealed. Read out of the indexed Code, so it cannot drift from the statute.</p>
+        <p class="note">It does not decide whether your transaction qualifies under § 381(a) — that turns on § 332 or a § 368(a)(1) reorganization, which is characterisation.</p>
+      </div>
+      <div class="verdict">
+        <span class="chip warn">§ 382(g)</span>
+        <p class="note" style="font-size:.97rem;margin-bottom:.8rem"><b>Did a change happen?</b> Each five-percent shareholder measured against their own low point over three years, increases summed, decreases floored at zero.</p>
+        <p class="note">A seller does not offset a buyer — which is why ordinary trading accumulates toward a change nobody intended.</p>
+      </div>
+      <div class="verdict">
+        <span class="chip bad">§ 382(b)</span>
+        <p class="note" style="font-size:.97rem;margin-bottom:.8rem"><b>What the ceiling is.</b> Value times the long-term tax-exempt rate, with the § 382(b)(2) carryforward and § 382(b)(3)(A) short-year proration applied.</p>
+        <p class="note">The rate is not in the Code. It is published monthly in the Bulletin, and TaxCite reads it from there.</p>
+      </div>
+    </div>
+
+    <div class="report" style="margin-top:1.75rem">
+      <div class="report-bar"><span>taxcite model-382 --value 50000000 --change-date 2026-09-15</span><span>workpaper</span></div>
+<pre>| Line                              |        Amount | Authority           |
+| Value of the old loss corporation | $50,000,000.00| <span class="v">I.R.C. § 382(e)(1)</span>  |
+| Long-term tax-exempt rate         |               | <span class="v">I.R.C. § 382(f)</span>     |
+<span class="d">    └─ 3.88% for September 2026, per Rev. Rul. 2026-17 (I.R.B. 2026-37)</span>
+| Base annual limitation            |  $1,940,000.00| <span class="v">I.R.C. § 382(b)(1)</span>  |
+
+| Year | Limitation | Carried in |     Income |   Absorbed | NOL remaining |
+| 2026 | $1,940,000 |         $0 | $1,500,000 | $1,500,000 |   $28,500,000 |
+| 2027 | $2,380,000 |   <span class="w">$440,000</span> | $2,000,000 | $2,000,000 |   $26,500,000 |
+| 2028 | $2,320,000 |   <span class="w">$380,000</span> | $4,000,000 | $2,320,000 |   $24,180,000 |</pre>
+    </div>
+
+    <div class="narrow" style="margin-top:1.75rem">
+      <p>A month whose rate has not been indexed produces <strong>no answer at all</strong> rather than a neighbouring month's rate — § 382(f) keys on the month, and substituting one would change the result invisibly. Built-in gain under § 382(h) and continuity under § 382(c)(1) are accepted as stated inputs and reported as assumptions, never as findings.</p>
+      <p>This is a computation, not a recommendation. It applies a rule to figures you supply and cites the authority for each step. <strong>It does not tell you whether to do the deal.</strong></p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="shell">
+    <div class="sec-head">
+      <span class="sec-num">07</span>
       <div>
         <h2>What it reads</h2>
         <p class="sec-sub">Official, public-domain government sources only. No proprietary research service is ever scraped, queried, or depended upon.</p>
@@ -526,107 +677,6 @@ footer { border-top: 1px solid var(--rule); padding: 3rem 0 3.5rem; }
         <h3>Published rates</h3>
         <p>The long-term tax-exempt rate is not in the Code — it is published monthly in Table 3 of the applicable-federal-rate ruling, and read straight out of the Bulletin.</p>
       </div>
-    </div>
-  </div>
-</section>
-
-<section id="cases">
-  <div class="shell">
-    <div class="sec-head">
-      <span class="sec-num">05</span>
-      <div>
-        <h2>Checking a quotation <em>without the opinion</em></h2>
-        <p class="sec-sub">The free case-law source publishes metadata, not opinion text. But it will answer a narrower question — <em>does this run of words occur in this decision?</em> — and that is a real verification.</p>
-      </div>
-    </div>
-    <div class="narrow">
-      <p>When a quotation fails, <em>where</em> it fails is the useful part. A passage that matches for seventeen words and then diverges has been misquoted; one that matches for none of them has been invented. A binary search over the opening words separates the two in a handful of requests, and an accurate quotation costs a single one.</p>
-      <p>Two limits are stated in the report rather than left to be discovered. A phrase search normalises punctuation away, so a passage differing only in punctuation passes — and the report says so on every such match. And a decision whose text was never indexed comes back <strong>unverifiable</strong>, never <em>not found</em>: failing to find a passage you never looked for is not evidence.</p>
-    </div>
-  </div>
-</section>
-
-<section id="navigate">
-  <div class="shell">
-    <div class="sec-head">
-      <span class="sec-num">06</span>
-      <div>
-        <h2>A sentence that is <em>mostly defined terms</em></h2>
-        <p class="sec-sub">Some regulations cannot be read straight through. A sentence of the consolidated return rules is built out of terms of art — each defined somewhere else, and reading it without them is reading it wrong.</p>
-      </div>
-    </div>
-
-    <div class="report">
-      <div class="report-bar"><span>taxcite reading-list "Treas. Reg. § 1.1502-21(c)"</span><span>SRLY limitation</span></div>
-<pre>Terms of art used here, and where they are defined
-
-  SRLY                        <span class="v">Treas. Reg. § 1.1502-1(f)(1)</span>
-  member                      <span class="v">Treas. Reg. § 1.1502-1(b)</span>
-  group                       <span class="v">Treas. Reg. § 1.1502-1(a)</span>
-  consolidated group          <span class="v">Treas. Reg. § 1.1502-1(h)</span>
-  separate return year        <span class="v">Treas. Reg. § 1.1502-1(e)</span>
-  consolidated return year    <span class="v">Treas. Reg. § 1.1502-1(d)</span>
-
-What this provision sends you to
-
-  1  Treas. Reg. § 1.1502-1(f) — Separate return limitation year
-  1  I.R.C. § 172 — Net operating loss deduction
-  1  I.R.C. § 1503(d) — Dual consolidated loss
-  1  I.R.C. § 163(j) — Limitation on business interest</pre>
-    </div>
-
-    <div class="narrow" style="margin-top:1.75rem">
-      <p><strong>Nothing here is curated.</strong> The cross-references come from the reference graph and the terms from the definitions index, both built from the official text. There is no editorial list of “things to read for SRLY”, because that would be an opinion wearing the clothes of a lookup.</p>
-      <p>Building it exposed a real gap. The eCFR <em>italicises</em> a defined term rather than quoting it, and italics do not survive text extraction — so “The term <em>member</em> means” matched nothing while “The term “consolidated group” means” matched. The most heavily defined corpus in Title 26 had almost none of its own terms indexed. It does now, abbreviations included, because the regulations define SRLY once and then write SRLY everywhere.</p>
-    </div>
-  </div>
-</section>
-
-<section id="compute">
-  <div class="shell">
-    <div class="sec-head">
-      <span class="sec-num">07</span>
-      <div>
-        <h2>What a target's losses are <em>actually worth</em></h2>
-        <p class="sec-sub">One question asked in three parts: what carries over, whether § 382 was triggered, and what the ceiling is if it was. Each is arithmetic or enumeration, and each is traceable to the statute.</p>
-      </div>
-    </div>
-
-    <div class="verdicts">
-      <div class="verdict">
-        <span class="chip ok">§ 381(c)</span>
-        <p class="note" style="font-size:.97rem;margin-bottom:.8rem"><b>What carries over.</b> A closed enumerated list of 23 attributes, plus 3 repealed. Read out of the indexed Code, so it cannot drift from the statute.</p>
-        <p class="note">It does not decide whether your transaction qualifies under § 381(a) — that turns on § 332 or a § 368(a)(1) reorganization, which is characterisation.</p>
-      </div>
-      <div class="verdict">
-        <span class="chip warn">§ 382(g)</span>
-        <p class="note" style="font-size:.97rem;margin-bottom:.8rem"><b>Did a change happen?</b> Each five-percent shareholder measured against their own low point over three years, increases summed, decreases floored at zero.</p>
-        <p class="note">A seller does not offset a buyer — which is why ordinary trading accumulates toward a change nobody intended.</p>
-      </div>
-      <div class="verdict">
-        <span class="chip bad">§ 382(b)</span>
-        <p class="note" style="font-size:.97rem;margin-bottom:.8rem"><b>What the ceiling is.</b> Value times the long-term tax-exempt rate, with the § 382(b)(2) carryforward and § 382(b)(3)(A) short-year proration applied.</p>
-        <p class="note">The rate is not in the Code. It is published monthly in the Bulletin, and TaxCite reads it from there.</p>
-      </div>
-    </div>
-
-    <div class="report" style="margin-top:1.75rem">
-      <div class="report-bar"><span>taxcite model-382 --value 50000000 --change-date 2026-09-15</span><span>workpaper</span></div>
-<pre>| Line                              |        Amount | Authority           |
-| Value of the old loss corporation | $50,000,000.00| <span class="v">I.R.C. § 382(e)(1)</span>  |
-| Long-term tax-exempt rate         |               | <span class="v">I.R.C. § 382(f)</span>     |
-<span class="d">    └─ 3.88% for September 2026, per Rev. Rul. 2026-17 (I.R.B. 2026-37)</span>
-| Base annual limitation            |  $1,940,000.00| <span class="v">I.R.C. § 382(b)(1)</span>  |
-
-| Year | Limitation | Carried in |     Income |   Absorbed | NOL remaining |
-| 2026 | $1,940,000 |         $0 | $1,500,000 | $1,500,000 |   $28,500,000 |
-| 2027 | $2,380,000 |   <span class="w">$440,000</span> | $2,000,000 | $2,000,000 |   $26,500,000 |
-| 2028 | $2,320,000 |   <span class="w">$380,000</span> | $4,000,000 | $2,320,000 |   $24,180,000 |</pre>
-    </div>
-
-    <div class="narrow" style="margin-top:1.75rem">
-      <p>A month whose rate has not been indexed produces <strong>no answer at all</strong> rather than a neighbouring month's rate — § 382(f) keys on the month, and substituting one would change the result invisibly. Built-in gain under § 382(h) and continuity under § 382(c)(1) are accepted as stated inputs and reported as assumptions, never as findings.</p>
-      <p>This is a computation, not a recommendation. It applies a rule to figures you supply and cites the authority for each step. <strong>It does not tell you whether to do the deal.</strong></p>
     </div>
   </div>
 </section>
