@@ -47,6 +47,14 @@ what it could not check.
 > [Apache License 2.0](LICENSE), sections 7 and 8. **You are responsible for
 > independently verifying every authority and every figure you rely on.** Do not file,
 > serve, or submit work on the strength of this tool alone.
+>
+> **Not affiliated with any government agency.** TaxCite is an independent open-source
+> project. It is not produced, endorsed, certified, or reviewed by the Internal Revenue
+> Service, the Department of the Treasury, the Office of the Law Revision Counsel, the
+> Government Publishing Office, or any court. It is not an official form, publication,
+> or record, and nothing it produces is one. The texts it retrieves are public-domain
+> works of the United States government (17 U.S.C. § 105); their use here implies no
+> endorsement. "TaxCite" is not a registered trademark and no claim is made to one.
 
 ## Why
 
@@ -210,16 +218,19 @@ this subsection, which does not reach I.R.C. § 162(a)
 
 ## Privacy, and the diligence record
 
-**Your document never leaves your machine.** Verification is local, against a local
-index. The only thing ever derived from your draft that touches the network is the
-*section number* of a Treasury Regulation that has not been downloaded yet — and
-`--offline` prevents even that, by sealing the process so no code path can make a
-request for the rest of the run. [`docs/privacy.md`](docs/privacy.md) has the details,
-including why I.R.C. § 7216 makes this more than a preference.
+**Your document does not leave your machine, with one exception**, stated here rather
+than buried: checking a quotation attributed to a **court decision** sends that quoted
+passage to CourtListener, because opinion text is not published as a bulk download the
+way the Code is. Everything else — statutes, regulations, guidance — is checked
+locally. `--no-case-quotes` declines that one transmission without going offline, and
+`--offline` seals the process so no code path can make any request for the rest of the
+run. [`docs/privacy.md`](docs/privacy.md) sets out exactly what is sent, including why
+I.R.C. § 7216 makes this more than a preference.
 
-IRS OPR Alert 2026-19 applies Circular 230 § 10.22 to AI-assisted work: a practitioner
-must review every AI-generated document, *including its citations*, before it goes out.
-`--record` writes that review down for the engagement file:
+IRS OPR Alert 2026-19 (24 June 2026) applies Circular 230 § 10.22 to AI-assisted work:
+a practitioner must review every AI-generated document, *including its citations*,
+before it goes out. `--record` writes down what this tool checked, so that part of the
+review has a trace:
 
 ```bash
 taxcite verify memo.md --tax-year 2022 --offline --record diligence.jsonl
@@ -228,7 +239,13 @@ taxcite verify memo.md --tax-year 2022 --offline --record diligence.jsonl
 Each entry names what was checked, against which published sources, when, with which
 version of the tool, and what was found — identifying the document by **SHA-256 hash
 rather than by content**, so the record does not become another copy of privileged
-text. It also states plainly what it does *not* establish: that the analysis is right.
+text.
+
+**A record is evidence of one mechanical check, not of compliance.** It does not
+establish that the § 10.22 duty was discharged, that the analysis is correct, or that
+the review a practitioner owes was performed — only a person can do that, and the
+record says so in its own text. Nothing in this project is a compliance product, and
+nothing in it should be represented to the Service or to a client as one.
 
 ## What a report looks like
 
@@ -545,9 +562,13 @@ adjudicated fact.
 ## Does what you cited actually count?
 
 Treas. Reg. § 1.6662-4(d)(3)(iii) sets out a **closed list** of what counts as
-authority for the substantial-authority standard — the thing that keeps the § 6662
-accuracy-related penalty off a return position. It says in terms that conclusions in
-treatises, law review articles and practitioners' opinions are *not* authority.
+authority for the substantial-authority standard, which bears on the § 6662
+accuracy-related penalty. It says in terms that conclusions in treatises, law review
+articles and practitioners' opinions are *not* authority.
+
+TaxCite sorts citations into those categories. **It does not determine whether
+substantial authority exists** — that turns on the weight of the authorities and their
+relevance to the facts, which is judgment, not classification.
 
 ```bash
 taxcite authority memo.md

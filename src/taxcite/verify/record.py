@@ -6,14 +6,18 @@ practitioner to review every AI-generated document before it reaches a client or
 Service, and the OPR names verification of *citations* among the things that review
 must cover.
 
-A verification report on a terminal satisfies the duty and proves nothing about it
-afterwards. This writes the same run down in a form that can sit in an engagement
-file: what was checked, against which published sources, when, by which version of
-which tool, and what it found. The document is identified by a hash rather than
-reproduced, so the record can be kept without copying privileged text into it.
+A verification report on a terminal leaves no trace afterwards. This writes the same
+run down in a form that can sit in an engagement file: what was checked, against which
+published sources, when, by which version of which tool, and what it found. The
+document is identified by a hash rather than reproduced, so the record can be kept
+without copying privileged text into it.
 
-What a record establishes and what it does not is stated in the record itself, because
-a compliance artifact that overstates itself is worse than none.
+**A record is not evidence of compliance.** It evidences that one mechanical check ran
+and what it returned. It does not establish that the § 10.22 duty was discharged, that
+the citations are apt, or that the analysis is right — the review that section requires
+is performed by a person, and no artifact produced here substitutes for it. That
+limitation is stated in the record itself, because a compliance artifact that
+overstates itself is worse than none.
 """
 
 from __future__ import annotations
@@ -31,8 +35,10 @@ from taxcite.verify.report import overall_severity
 
 #: The guidance this record is designed to evidence compliance with.
 AUTHORITY_NOTE: Final = (
-    "Circular 230 \u00a7 10.22 (due diligence), as applied to AI-assisted work by IRS "
-    "Office of Professional Responsibility Alert 2026-19."
+    "Context for this record: Circular 230 \u00a7 10.22 (due diligence), as applied to "
+    "AI-assisted work by IRS Office of Professional Responsibility Alert 2026-19 "
+    "(24 June 2026). Citing that guidance here describes why the record exists. It is "
+    "not a representation that the record satisfies it."
 )
 
 SCOPE_NOTE: Final = (
@@ -41,7 +47,13 @@ SCOPE_NOTE: Final = (
     "below, and what that check found. It does not evidence that the document's legal "
     "analysis is correct, that its conclusions are sound, or that any authority cited "
     "supports the proposition it is cited for. Those are matters of professional "
-    "judgment that no tool performs and that this record does not address."
+    "judgment that no tool performs and that this record does not address.\n\n"
+    "This record is not evidence of compliance with any professional standard, and "
+    "must not be represented as such to a client, to the Internal Revenue Service, or "
+    "to any other person. The review required of a practitioner is performed by that "
+    "practitioner; this records only that one mechanical check was run, and what it "
+    "returned. TaxCite is experimental software provided without warranty, and has "
+    "not been reviewed by a licensed tax professional."
 )
 
 

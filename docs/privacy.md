@@ -12,6 +12,12 @@ disclosure. So is uploading it to a research platform. The ordinary duty of
 confidentiality points the same way. A tool that checks citations without transmitting
 the text being checked is in a materially different position from one that does not.
 
+> **This document describes what the software does. It is not legal advice about
+> § 7216, Circular 230, or your confidentiality obligations, and it is not a
+> representation that using TaxCite satisfies any of them.** Whether a particular use
+> is permissible is a question for you and your own counsel. TaxCite is an independent
+> open-source project, not affiliated with or endorsed by any government agency.
+
 ## What is transmitted, and when
 
 | When | To | What |

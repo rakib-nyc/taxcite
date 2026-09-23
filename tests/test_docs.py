@@ -198,3 +198,75 @@ def test_the_user_agent_names_the_published_repository() -> None:
     assert REPO_URL == "https://github.com/rakib-nyc/taxcite"
     assert REPO_URL in USER_AGENT
     assert "taxcite/" in USER_AGENT
+
+
+# --------------------------------------------------------------------------------------
+# Representations to the public
+# --------------------------------------------------------------------------------------
+#
+# The project reads government sources, cites Circular 230, and renders output that
+# looks like a workpaper. Each of those makes it easier to imply something untrue —
+# that the project is official, endorsed, or that using it discharges a professional
+# duty. None of those is true, and these guard the statements that say so.
+
+_PUBLIC_SURFACES = ("README.md", "website/index.html")
+
+
+def test_no_surface_claims_government_affiliation() -> None:
+    for name in _PUBLIC_SURFACES:
+        text = (ROOT / name).read_text(encoding="utf-8")
+        assert "Not affiliated with any government agency" in text, name
+
+
+def test_no_surface_invents_an_official_form_number() -> None:
+    """A form number on a page that reads like a form implies an official record."""
+    for name in _PUBLIC_SURFACES:
+        text = (ROOT / name).read_text(encoding="utf-8")
+        assert not re.search(r"\bForm\s+[A-Z]{1,3}\s*-?\s*\d", text), name
+
+
+def test_the_privacy_claim_is_qualified_everywhere_it_appears() -> None:
+    """Checking a case quotation transmits it; an unqualified promise is false."""
+    for name in (*_PUBLIC_SURFACES, "docs/privacy.md"):
+        text = (ROOT / name).read_text(encoding="utf-8")
+        assert "never leaves your machine" not in text, name
+
+
+def test_nothing_the_project_writes_claims_to_satisfy_a_professional_duty() -> None:
+    """Only the project's own prose is checked.
+
+    Fixtures and examples carry real published law, which says things like "satisfies
+    the requirement" about taxpayers — that is the Bulletin talking, not this project.
+    """
+    authored = [
+        path
+        for path in _published_files()
+        if path.suffix in {".md", ".py", ".html"}
+        and not any(part in {"tests", "examples"} for part in path.parts)
+    ]
+    assert authored, "no authored files found"
+    forbidden = re.compile(
+        r"satisfies (the )?(duty|requirement|standard)|ensure[sd]? complian"
+        r"|evidence of compliance with",
+        re.IGNORECASE,
+    )
+    for path in authored:
+        text = path.read_text(encoding="utf-8", errors="ignore")
+        for match in forbidden.finditer(text):
+            # A statement that it is *not* evidence of compliance is the point.
+            window = text[max(0, match.start() - 40) : match.start()].lower()
+            assert "not " in window, f"{path}: {match.group(0)!r}"
+
+
+def test_the_diligence_record_disclaims_compliance() -> None:
+    from taxcite.verify.record import AUTHORITY_NOTE, SCOPE_NOTE
+
+    assert "not a representation that the record satisfies it" in AUTHORITY_NOTE
+    assert "not evidence of compliance" in SCOPE_NOTE
+    assert "must not be represented as such" in SCOPE_NOTE
+
+
+def test_the_privacy_document_is_not_offered_as_legal_advice() -> None:
+    text = (ROOT / "docs" / "privacy.md").read_text(encoding="utf-8")
+    assert "not legal advice about" in text
+    assert "not affiliated with or endorsed by any government agency" in text
