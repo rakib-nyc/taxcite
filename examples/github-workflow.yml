@@ -1,0 +1,23 @@
+# Check tax citations in every pull request.
+#
+# Copy this to .github/workflows/taxcite.yml in your own repository.
+name: TaxCite
+
+on:
+  pull_request:
+    paths: ["**/*.md"]
+
+permissions:
+  contents: read
+
+jobs:
+  citations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify tax citations
+        uses: taxcite/taxcite@v0.1.0
+        with:
+          files: "memos/**/*.md"
+          fail-on: error

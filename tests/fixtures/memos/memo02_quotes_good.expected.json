@@ -1,0 +1,12 @@
+{
+  "description": "Control memo. Every citation resolves and every quotation is verbatim from the uslm fixtures, so nothing may be reported at warning or error severity.",
+  "citations": [
+    {"display": "I.R.C. § 162(a)", "status": "verified", "quotes": ["quote_exact"]},
+    {"display": "I.R.C. § 162(a)(1)", "status": "verified", "quotes": ["quote_exact"]},
+    {"display": "I.R.C. § 61(a)", "status": "verified", "quotes": ["quote_exact"]},
+    {"display": "I.R.C. § 7701(a)(30)(A)", "status": "verified", "quotes": ["quote_exact"]},
+    {"display": "I.R.C. § 469(h)(1)", "status": "verified", "quotes": ["quote_exact"]}
+  ],
+  "max_severity": "ok",
+  "must_not_match": []
+}

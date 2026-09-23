@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SYNTHETIC fixture. This is not real regulatory text. It exists only to exercise the
+  paragraph-hierarchy reconstruction in SPEC 6.4, including every ambiguous case the
+  spec calls out: (h)->(i)->(j) staying at L1, (2)->(i)->(ii) opening L3, (v) after
+  (iv) at L3 against (v) after (u) at L1, and a paragraph opening with three markers.
+  The text is deliberately nonsensical.
+-->
+<DIV8 N="1.9999-1" TYPE="SECTION">
+<HEAD>&#xA7; 1.9999-1 Lorem regulation.</HEAD>
+<P>(h) <I>Lorem h.</I> Lorem text at the eighth letter.</P>
+<P>(i) Lorem text that continues the lettered level, not a roman clause.</P>
+<P>(j) Lorem text at the tenth letter.</P>
+<P>(k) <I>Lorem k.</I> Lorem chapeau before a numbered level.</P>
+<P>(1) Lorem first numbered paragraph.</P>
+<P>(2) Lorem second numbered paragraph, introducing clauses.</P>
+<P>(i) Lorem first roman clause, one level deeper than the numbers.</P>
+<P>(ii) Lorem second roman clause.</P>
+<P>(iii) Lorem third roman clause.</P>
+<P>(iv) Lorem fourth roman clause.</P>
+<P>(v) Lorem fifth roman clause, which continues the romans.</P>
+<P>(A) Lorem first uppercase subclause.</P>
+<P>(B) Lorem second uppercase subclause, introducing italic numbers.</P>
+<P>(<I>1</I>) Lorem first italic item.</P>
+<P>(<I>2</I>) Lorem second italic item, introducing italic romans.</P>
+<P>(<I>i</I>) Lorem first italic roman subitem.</P>
+<P>(<I>ii</I>) Lorem second italic roman subitem.</P>
+<P>(s) <I>Lorem s.</I> Lorem text back at the lettered level.</P>
+<P>(t) Lorem text at the twentieth letter.</P>
+<P>(u) Lorem text at the twenty-first letter.</P>
+<P>(v) Lorem text that continues the letters, and is not a roman five.</P>
+<P>(w) <I>Lorem w</I>&#x2014;(1) <I>Lorem w one.</I> Lorem paragraph that opens with two markers.</P>
+<P>(x) (1) (i) Lorem paragraph that opens with three markers.</P>
+<P>Lorem continuation text with no marker at all, belonging to the paragraph above.</P>
+<CITA TYPE="N">[T.D. 0000, 00 FR 0000, Jan. 1, 1900]</CITA>
+</DIV8>

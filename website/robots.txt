@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://rakib-nyc.github.io/taxcite/sitemap.xml

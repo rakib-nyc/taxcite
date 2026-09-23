@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SYNTHETIC fixture. This is not real law. It exists only to exercise the USLM walker's
+  handling of every subdivision level, of a chapeau/continuation pair, and of an
+  explicit <ref>. The text is deliberately nonsensical.
+-->
+<uscDoc xmlns="http://xml.house.gov/schemas/uslm/1.0" identifier="/us/usc/t26">
+<main>
+<section identifier="/us/usc/t26/s9999"><num value="9999">§ 9999.</num><heading> Lorem provision</heading>
+<subsection identifier="/us/usc/t26/s9999/a"><num value="a">(a)</num><heading> Lorem heading</heading><chapeau>Lorem ipsum chapeau dolor, including—</chapeau>
+<paragraph identifier="/us/usc/t26/s9999/a/1"><num value="1">(1)</num><content>lorem paragraph one, see <ref href="/us/usc/t26/s61">section 61</ref>;</content></paragraph>
+<paragraph identifier="/us/usc/t26/s9999/a/2"><num value="2">(2)</num><chapeau>lorem paragraph two, namely—</chapeau>
+<subparagraph identifier="/us/usc/t26/s9999/a/2/A"><num value="A">(A)</num><chapeau>lorem subparagraph A, that is—</chapeau>
+<clause identifier="/us/usc/t26/s9999/a/2/A/i"><num value="i">(i)</num><chapeau>lorem clause i, comprising—</chapeau>
+<subclause identifier="/us/usc/t26/s9999/a/2/A/i/I"><num value="I">(I)</num><chapeau>lorem subclause I, split into—</chapeau>
+<item identifier="/us/usc/t26/s9999/a/2/A/i/I/aa"><num value="aa">(aa)</num><chapeau>lorem item aa, split into—</chapeau>
+<subitem identifier="/us/usc/t26/s9999/a/2/A/i/I/aa/AA"><num value="AA">(AA)</num><content>lorem subitem AA.</content></subitem>
+</item>
+</subclause>
+</clause>
+</subparagraph>
+</paragraph>
+<continuation>Lorem continuation text follows the paragraphs.</continuation>
+</subsection>
+<subsection identifier="/us/usc/t26/s9999/b"><num value="b">(b)</num><heading> Lorem second heading</heading><content><p>Lorem subsection b content.</p></content>
+<notes type="uscNote"><note topic="editorialNotes"><p>Lorem editorial note that must never appear in provision text.</p></note></notes>
+</subsection>
+<sourceCredit>(Lorem source credit that must never appear in provision text.)</sourceCredit>
+</section>
+</main>
+</uscDoc>

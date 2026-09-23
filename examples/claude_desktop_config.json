@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "taxcite": {
+      "command": "uv",
+      "args": ["--directory", "/absolute/path/to/taxcite", "run", "taxcite", "serve"]
+    }
+  }
+}

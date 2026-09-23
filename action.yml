@@ -1,0 +1,97 @@
+name: TaxCite
+description: >-
+  Verify the tax citations and quotations in changed Markdown files against the
+  Internal Revenue Code and the Treasury Regulations.
+author: TaxCite contributors
+
+branding:
+  icon: check-circle
+  color: blue
+
+inputs:
+  files:
+    description: >-
+      Files to check. A space-separated list of paths or globs.
+    required: false
+    default: "**/*.md"
+  fail-on:
+    description: 'Fail the job at this severity: error, warning, or never.'
+    required: false
+    default: error
+  offline:
+    description: >-
+      Never reach the network. Treasury Regulation citations that are not in the
+      cached index are reported as source_unavailable rather than fetched.
+    required: false
+    default: "false"
+  build-index:
+    description: >-
+      Build the index before verifying. Downloads Title 26 from uscode.house.gov
+      (about 8 MB). Set to false if you restore the index from a cache.
+    required: false
+    default: "true"
+  taxcite-version:
+    description: Version of TaxCite to install from PyPI.
+    required: false
+    default: ""
+  python-version:
+    description: Python version to run on.
+    required: false
+    default: "3.12"
+
+outputs:
+  report:
+    description: Path to the Markdown report.
+    value: ${{ steps.verify.outputs.report }}
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Install TaxCite
+      shell: bash
+      run: |
+        if [ -n "${{ inputs.taxcite-version }}" ]; then
+          python -m pip install --quiet "taxcite==${{ inputs.taxcite-version }}"
+        else
+          python -m pip install --quiet taxcite
+        fi
+
+    - name: Cache the index
+      uses: actions/cache@v4
+      with:
+        path: ~/.taxcite
+        key: taxcite-index-${{ runner.os }}-${{ hashFiles('**/.taxcite-release-point') }}
+        restore-keys: taxcite-index-${{ runner.os }}-
+
+    - name: Build the index
+      if: inputs.build-index == 'true'
+      shell: bash
+      run: taxcite build-index
+
+    - name: Verify citations
+      id: verify
+      shell: bash
+      run: |
+        set -o pipefail
+        shopt -s globstar nullglob
+        files=(${{ inputs.files }})
+        if [ ${#files[@]} -eq 0 ]; then
+          echo "No files matched ${{ inputs.files }}; nothing to verify."
+          exit 0
+        fi
+        offline=""
+        if [ "${{ inputs.offline }}" = "true" ]; then offline="--offline"; fi
+
+        # Annotations go to the workflow log; the Markdown report goes to the summary.
+        taxcite verify "${files[@]}" --format github $offline --fail-on never
+        taxcite verify "${files[@]}" --format md $offline --fail-on never \
+          > "$RUNNER_TEMP/taxcite-report.md"
+        cat "$RUNNER_TEMP/taxcite-report.md" >> "$GITHUB_STEP_SUMMARY"
+        echo "report=$RUNNER_TEMP/taxcite-report.md" >> "$GITHUB_OUTPUT"
+
+        taxcite verify "${files[@]}" $offline --fail-on "${{ inputs.fail-on }}" > /dev/null

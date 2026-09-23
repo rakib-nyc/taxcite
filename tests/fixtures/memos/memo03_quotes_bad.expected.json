@@ -1,0 +1,15 @@
+{
+  "description": "Every quotation failure mode. The quoted language is taken from the uslm fixtures and then deliberately altered, moved, or invented, as noted per citation.",
+  "citations": [
+    {"display": "I.R.C. § 162(a)", "status": "verified", "quotes": ["quote_close"],
+     "planted": "one word changed: 'necessary' to 'reasonable'"},
+    {"display": "I.R.C. § 162(b)", "status": "verified", "quotes": ["quote_wrong_pinpoint"],
+     "planted": "verbatim § 162(a) text attributed to § 162(b)"},
+    {"display": "I.R.C. § 263(a)", "status": "verified", "quotes": ["quote_misattributed"],
+     "planted": "verbatim § 61(a) text attributed to § 263(a)"},
+    {"display": "I.R.C. § 61(a)", "status": "verified", "quotes": ["quote_not_found"],
+     "planted": "fabricated language that appears nowhere in the Code"}
+  ],
+  "orphan_quotes": ["quote_misattributed"],
+  "must_not_match": []
+}

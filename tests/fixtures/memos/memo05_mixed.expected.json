@@ -1,0 +1,23 @@
+{
+  "description": "A realistic mixed memo: statute, regulations, sub-regulatory guidance, masked false friends, and one bad pinpoint. Regulation citations are SOURCE_UNAVAILABLE until the eCFR index exists, and VERIFIED afterwards.",
+  "citations": [
+    {"display": "I.R.C. § 162(a)", "status": "verified"},
+    {"display": "I.R.C. § 263A", "status": "verified"},
+    {"display": "I.R.C. § 1411(a)(1)", "status": "verified", "quotes": ["quote_exact"]},
+    {"display": "Treas. Reg. § 1.162-1(a)", "status": "reg"},
+    {"display": "Temp. Treas. Reg. § 1.469-5T(a)", "status": "reg"},
+    {"display": "Prop. Treas. Reg. § 1.199A-1", "status": "reg"},
+    {"display": "Rev. Proc. 2023-34", "status": "unverifiable"},
+    {"display": "Notice 2024-7", "status": "unverifiable"},
+    {"display": "T.D. 9959", "status": "unverifiable"},
+    {"display": "PLR 202301001", "status": "unverifiable"},
+    {"display": "I.R.C. § 7701(a)(99)", "status": "pinpoint_not_found",
+     "planted": "subdivision that does not exist"}
+  ],
+  "must_not_match": [
+    "`section 162`",
+    "https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title26-section162",
+    "Section 12 of this Plan",
+    "Pub. L. 115-97, section 13101"
+  ]
+}

@@ -1,0 +1,34 @@
+# Data — never commit
+.taxcite/
+*.db
+*.db-wal
+*.db-shm
+*.zip
+raw/
+cache/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.hypothesis/
+.coverage
+htmlcov/
+coverage.xml
+
+# Draft evaluation material. The question set has not been reviewed by a
+# subject-matter expert, so it is not published: doing so would invite its use as
+# a benchmark it is not yet fit to be.
+evals/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

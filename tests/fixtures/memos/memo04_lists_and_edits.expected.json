@@ -1,0 +1,26 @@
+{
+  "description": "Lists, ranges, and quotations that have been legitimately edited with an ellipsis or a bracketed alteration. Every citation exists and every quotation should verify.",
+  "citations": [
+    {"display": "I.R.C. § 162", "status": "verified"},
+    {"display": "I.R.C. § 263", "status": "verified"},
+    {"display": "I.R.C. § 162(a)", "status": "verified"},
+    {"display": "I.R.C. § 263(a)", "status": "verified"},
+    {"display": "I.R.C. § 263A", "status": "verified"},
+    {"display": "I.R.C. § 1001", "status": "verified"},
+    {"display": "I.R.C. § 1012", "status": "verified"},
+    {"display": "I.R.C. § 1031", "status": "verified"},
+    {"display": "I.R.C. § 1032", "status": "verified"},
+    {"display": "I.R.C. § 1033", "status": "verified"},
+    {"display": "I.R.C. § 162(b)", "status": "verified"},
+    {"display": "I.R.C. § 162(c)", "status": "verified"},
+    {"display": "I.R.C. § 61(a)", "status": "verified"},
+    {"display": "I.R.C. § 61(b)", "status": "verified"},
+    {"display": "I.R.C. § 7701(a)(30)(A)", "status": "verified"}
+  ],
+  "expansions": {
+    "§§ 1031–1033": ["1031", "1032", "1033"],
+    "§ 162(a)–(c)": ["a", "b", "c"]
+  },
+  "max_severity": "info",
+  "must_not_match": []
+}

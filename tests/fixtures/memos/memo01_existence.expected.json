@@ -1,0 +1,27 @@
+{
+  "description": "Existence checks only: a nonexistent section, two bad pinpoints, a repealed section, a reserved section, unverifiable cites, and two non-tax references that must not be matched.",
+  "citations": [
+    {"display": "I.R.C. § 162", "status": "verified"},
+    {"display": "I.R.C. § 61", "status": "verified"},
+    {"display": "I.R.C. § 162A", "status": "not_found",
+     "planted": "section that does not exist",
+     "suggestion_contains": "162"},
+    {"display": "I.R.C. § 162(z)", "status": "pinpoint_not_found",
+     "planted": "subdivision that does not exist in a real section",
+     "suggestion_contains": "(a)"},
+    {"display": "I.R.C. § 7701(a)(30)(A)", "status": "verified"},
+    {"display": "I.R.C. § 263", "status": "verified"},
+    {"display": "I.R.C. § 263A", "status": "verified"},
+    {"display": "I.R.C. § 263(a)(9)", "status": "pinpoint_not_found",
+     "planted": "paragraph that does not exist; the classic 263(a)/263A mix-up, so the suggestion must name § 263A",
+     "suggestion_contains": "263A"},
+    {"display": "I.R.C. § 263(q)", "status": "pinpoint_not_found",
+     "planted": "subsection that does not exist",
+     "suggestion_contains": "(a)"},
+    {"display": "I.R.C. § 4", "status": "repealed", "planted": "repealed section"},
+    {"display": "I.R.C. § 1000", "status": "reserved", "planted": "reserved section"},
+    {"display": "Rev. Rul. 2019-24", "status": "unverifiable"},
+    {"display": "Commissioner v. Groetzinger, 480 U.S. 23 (1987)", "status": "unverifiable"}
+  ],
+  "must_not_match": ["Section 7 of the Agreement", "section 3 of the Tax Cuts and Jobs Act"]
+}
