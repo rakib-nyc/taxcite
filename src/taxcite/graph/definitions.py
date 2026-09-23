@@ -48,7 +48,25 @@ _DEFINITION_RES: Final[tuple[re.Pattern[str], ...]] = (
         + r"\s*(?P<verb>means|includes|shall mean|shall include|has the meaning)\b",
         re.IGNORECASE,
     ),
+    # "The term member means …", with no quotation marks at all. The regulations
+    # italicise the defined term instead of quoting it, and italics do not survive
+    # text extraction — so the most heavily defined corpus in Title 26, the
+    # consolidated return regulations, defined "member", "separate return limitation
+    # year" and most of its other terms of art in a form nothing here could see.
+    # The term is whatever sits between "term" and the verb, which is unambiguous
+    # because the verb is what ends it.
+    re.compile(
+        r"\bthe terms?\s+(?P<first>(?!of\b)[A-Za-z][\w'’-]*(?:\s+[\w'’(),.-]+){0,7}?)"
+        r"\s+(?P<verb>means|mean|includes|include|shall mean|shall include"
+        r"|has the meaning|have the meaning|does not include|shall not include)\b",
+        re.IGNORECASE,
+    ),
 )
+
+#: A trailing parenthetical abbreviation the regulations attach to a defined term:
+#: "separate return limitation year (or SRLY)". The abbreviation is a second name for
+#: the same thing, and the term itself is what precedes it.
+_TRAILING_ABBREVIATION_RE: Final = re.compile(r"\s*\((?:or\s+)?[A-Za-z][\w\s'’-]{0,40}\)\s*$")
 
 #: Function words that never begin a defined term, so that "such property means" and
 #: "which income includes" do not become definitions.
@@ -183,12 +201,17 @@ def extract_definitions(text: str) -> Iterator[tuple[str, str, str | None, str |
             reference = _BY_REFERENCE_RE.search(text[match.start() : match.end() + 160])
             quoted_spans.append(match.span())
             for term in terms:
-                cleaned = term.strip().strip(",;:")
-                key = (normalize_term(cleaned), match.start())
-                if not cleaned or key in seen:
+                cleaned, abbreviation = _clean_term(term)
+                if not cleaned:
                     continue
-                seen.add(key)
-                yield cleaned, body, scope, reference.group(0) if reference else None
+                for name in (cleaned, abbreviation):
+                    if not name:
+                        continue
+                    key = (normalize_term(name), match.start())
+                    if key in seen:
+                        continue
+                    seen.add(key)
+                    yield name, body, scope, reference.group(0) if reference else None
 
     for match in _UNQUOTED_RE.finditer(text):
         if any(low <= match.start("first") < high for low, high in quoted_spans):
@@ -204,6 +227,43 @@ def extract_definitions(text: str) -> Iterator[tuple[str, str, str | None, str |
         start = match.start("first")
         body = text[start : start + DEFINITION_TEXT_MAX_CHARS].strip()
         yield term, body, _scope_before(text, start), None
+
+
+def _clean_term(term: str) -> tuple[str, str | None]:
+    """Tidy a term the text explicitly marked as defined, or return "".
+
+    This is for captures from "the term X means", where the statute has already said
+    that X is a term of art. That marker is the evidence, so the trailing-function-word
+    guard that protects the bare "X means" pattern does not apply here: it would throw
+    away "separate return limitation year" because "year" ends it, and that is one of
+    the most important defined terms in the consolidated return regulations.
+
+    What is still rejected is a capture that begins on a function word, which means the
+    sentence did not read the way the pattern assumed, and a bare function word.
+
+    Returns:
+        The term, and the abbreviation the text gave it, if any. The abbreviation is
+        worth keeping: the regulations define "separate return limitation year (or
+        SRLY)" once and then write SRLY everywhere, so indexing only the long form
+        finds the term in none of the provisions that actually use it.
+    """
+    stripped = term.strip()
+    abbreviation: str | None = None
+    trailing = _TRAILING_ABBREVIATION_RE.search(stripped)
+    if trailing is not None:
+        inner = trailing.group(0).strip().strip("()").strip()
+        if inner.lower().startswith("or "):
+            inner = inner[3:].strip()
+        # Only an abbreviation, not a parenthetical aside: short, and not a sentence.
+        if inner and len(inner.split()) <= 3 and any(c.isalpha() for c in inner):
+            abbreviation = inner
+    cleaned = _TRAILING_ABBREVIATION_RE.sub("", stripped).strip().strip(",;:")
+    words = cleaned.split()
+    if not words:
+        return "", None
+    if words[0].lower() in _STOP_WORDS:
+        return "", None
+    return cleaned, abbreviation
 
 
 def _scope_before(text: str, position: int) -> str | None:

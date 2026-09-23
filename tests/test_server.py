@@ -42,6 +42,7 @@ EXPECTED_TOOLS = {
     "resolve_citation",
     "check_case",
     "model_section_382",
+    "reading_list",
     "verify_citations",
     "get_cross_references",
     "find_definition",

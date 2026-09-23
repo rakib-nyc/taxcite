@@ -850,3 +850,36 @@ def model_382_command(
             short_year_days=short_year_days,
         )
     print(section382.to_markdown(result))
+
+
+@app.command("reading-list")
+def reading_list_command(
+    citation: Annotated[str, typer.Argument(help='A citation, e.g. "Treas. Reg. § 1.1502-21(c)".')],
+    depth: Annotated[int, typer.Option("--depth", help="How far to walk references.")] = 2,
+    limit: Annotated[int, typer.Option("--limit", help="Maximum provisions.")] = 25,
+    tax_year: Annotated[
+        int | None,
+        typer.Option("--tax-year", help="Flag anything that did not govern this year."),
+    ] = None,
+) -> None:
+    """List what to read, what the terms of art mean, and what may be stale.
+
+    Built for the corners of the regulations where a sentence is mostly defined
+    terms — the consolidated return rules above all — and reading it without them is
+    reading it wrong.
+    """
+    from taxcite.graph import readinglist
+
+    parsed = api.coerce_citation(citation)
+    if parsed.canonical_id is None:
+        raise ConfigurationError(f"{parsed.display} is not a Code or regulation citation")
+    with api.open_index() as connection:
+        reading = readinglist.build(
+            connection, parsed.canonical_id, depth=depth, limit=limit, tax_year=tax_year
+        )
+    if reading is None:
+        raise ConfigurationError(
+            f"{parsed.display} is not in the index",
+            hint="Run `taxcite build-index --regs 1` to add the regulations.",
+        )
+    print(readinglist.to_markdown(reading))

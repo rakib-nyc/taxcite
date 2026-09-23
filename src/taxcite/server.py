@@ -399,6 +399,37 @@ def model_section_382(
 
 @mcp.tool()
 @friendly
+def reading_list(
+    citation: str, depth: int = 2, limit: int = 25, tax_year: int | None = None
+) -> str:
+    """List what to read to understand a provision, and what its terms of art mean.
+
+    Use this before answering from a regulation whose sentences are built out of
+    defined terms — the consolidated return rules especially, where "member",
+    "group" and "SRLY" each mean something the regulation states elsewhere.
+
+    Args:
+        citation: The provision to start from, e.g. "Treas. Reg. § 1.1502-21(c)".
+        depth: How far to walk the reference graph.
+        limit: Maximum provisions to list.
+        tax_year: Flag anything that did not govern this tax year.
+    """
+    from taxcite.graph import readinglist
+
+    parsed = api.coerce_citation(citation)
+    if parsed.canonical_id is None:
+        return f"{parsed.display} is not a Code or regulation citation."
+    with _index() as connection:
+        reading = readinglist.build(
+            connection, parsed.canonical_id, depth=depth, limit=limit, tax_year=tax_year
+        )
+        if reading is None:
+            return f"{parsed.display} is not in the index."
+        return readinglist.to_markdown(reading)
+
+
+@mcp.tool()
+@friendly
 def get_cross_references(citation: str, direction: str = "both") -> str:
     """List what a provision cites, and what cites it.
 

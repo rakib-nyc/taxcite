@@ -345,6 +345,31 @@ A case cited a thousand times and again last month is alive. One last cited in 1
 deserves a look before you rely on it. Neither is a treatment determination, and
 TaxCite does not dress it up as one.
 
+## Reading the consolidated return regulations
+
+Some regulations are almost entirely terms of art. A sentence of
+Treas. Reg. § 1.1502-21 is built out of "member", "group", "SRLY" and
+"consolidated return year" — each defined somewhere else, and reading the sentence
+without them is reading it wrong. `taxcite reading-list` gives you both halves: what
+the provision sends you to, and what its words mean.
+
+```bash
+uv run taxcite reading-list "Treas. Reg. § 1.1502-21(c)"
+```
+
+```
+| Term                     | Defined at                    |
+| SRLY                     | Treas. Reg. § 1.1502-1(f)(1)  |
+| member                   | Treas. Reg. § 1.1502-1(b)     |
+| consolidated group       | Treas. Reg. § 1.1502-1(h)     |
+| separate return year     | Treas. Reg. § 1.1502-1(e)     |
+```
+
+Nothing here is curated. The cross-references come from the reference graph and the
+terms from the definitions index, both built from the official text — there is no
+editorial list of "things to read for SRLY", because that would be an opinion wearing
+the clothes of a lookup.
+
 ## Tax modelling — computation, not advice
 
 Some numbers a tax memo depends on are not in the Code at all. The one that matters
