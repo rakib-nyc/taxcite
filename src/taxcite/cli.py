@@ -135,6 +135,13 @@ def build_index_command(
             help="Years of the Internal Revenue Bulletin to index, e.g. 2023-2026.",
         ),
     ] = None,
+    rates: Annotated[
+        str | None,
+        typer.Option(
+            "--rates",
+            help=("Years to read published § 382 long-term tax-exempt rates for, e.g. 2025-2026."),
+        ),
+    ] = None,
     force: Annotated[
         bool, typer.Option("--force", help="Re-download sources already on disk.")
     ] = False,
@@ -155,6 +162,7 @@ def build_index_command(
         return
     parts = [part.strip() for part in regs.split(",") if part.strip()] if regs else None
     years = _parse_years(irb)
+    rate_years = _parse_years(rates)
     with console.status("Building index…") as status:
 
         def progress(stage: str, count: int) -> None:
@@ -164,6 +172,7 @@ def build_index_command(
             irc=irc,
             reg_parts=parts,
             irb_years=years,
+            rate_years=rate_years,
             force=force,
             progress=progress,
         )
@@ -180,6 +189,8 @@ def build_index_command(
     )
     if result.guidance:
         console.print(f"Indexed [bold]{result.guidance}[/bold] guidance documents.")
+    if result.rates:
+        console.print(f"Indexed [bold]{result.rates}[/bold] months of published rates.")
     for label, version_string in result.source_versions.items():
         console.print(f"  {label}: {version_string}")
 
@@ -763,3 +774,79 @@ def main() -> None:
 
 
 __all__ = ["DISCLAIMER", "app", "main"]
+
+
+@app.command("model-382")
+def model_382_command(
+    value: Annotated[
+        float,
+        typer.Option(
+            "--value",
+            help="Fair market value of the loss corporation immediately before the "
+            "ownership change (I.R.C. § 382(e)(1)).",
+        ),
+    ],
+    change_date: Annotated[
+        str,
+        typer.Option("--change-date", help="Ownership change date, YYYY-MM-DD."),
+    ],
+    nol: Annotated[
+        float, typer.Option("--nol", help="Pre-change NOL carryforwards subject to the limit.")
+    ] = 0.0,
+    years: Annotated[int, typer.Option("--years", help="Taxable years to project.")] = 0,
+    income: Annotated[
+        str | None,
+        typer.Option(
+            "--income",
+            help="Comma-separated projected pre-NOL taxable income per year, e.g. 4e6,5e6.",
+        ),
+    ] = None,
+    rbig: Annotated[
+        float,
+        typer.Option("--rbig", help="Recognised built-in gain, I.R.C. § 382(h)(1)(A)."),
+    ] = 0.0,
+    no_continuity: Annotated[
+        bool,
+        typer.Option(
+            "--no-continuity",
+            help="The continuity-of-business-enterprise requirement of § 382(c)(1) is not met.",
+        ),
+    ] = False,
+    short_year_days: Annotated[
+        int | None,
+        typer.Option("--short-year-days", help="Days in the first taxable year, § 382(b)(3)(A)."),
+    ] = None,
+) -> None:
+    """Compute an I.R.C. § 382 limitation, citing the authority for every line.
+
+    This is a computation, not advice. It applies § 382 to figures you supply and
+    names the Revenue Ruling the rate came from. It does not determine whether an
+    ownership change occurred, value the corporation, or opine on any position.
+    """
+    from decimal import Decimal
+
+    from taxcite.model import section382
+
+    when = _parse_as_of(change_date)
+    if when is None:
+        raise ConfigurationError(
+            "--change-date is required", hint="Give an ownership change date as YYYY-MM-DD."
+        )
+    projected = (
+        [Decimal(str(float(piece))) for piece in income.split(",") if piece.strip()]
+        if income
+        else None
+    )
+    with api.open_index() as connection:
+        result = section382.compute(
+            connection,
+            change_date=when,
+            value=Decimal(str(value)),
+            nol=Decimal(str(nol)),
+            years=years,
+            taxable_income=projected,
+            rbig=Decimal(str(rbig)),
+            continuity=not no_continuity,
+            short_year_days=short_year_days,
+        )
+    print(section382.to_markdown(result))

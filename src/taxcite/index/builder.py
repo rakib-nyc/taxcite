@@ -42,6 +42,7 @@ class BuildResult:
     reg_sections: int = 0
     reg_provisions: int = 0
     guidance: int = 0
+    rates: int = 0
     refs: int = 0
     definitions: int = 0
     source_versions: dict[str, str] = field(default_factory=dict)
@@ -131,6 +132,7 @@ def build_index(
     irc: bool = True,
     reg_parts: list[str] | None = None,
     irb_years: list[int] | None = None,
+    rate_years: list[int] | None = None,
     force: bool = False,
     connection: sqlite3.Connection | None = None,
     client: HttpClient | None = None,
@@ -142,6 +144,8 @@ def build_index(
         irc: Download and index Title 26.
         reg_parts: CFR Title 26 parts to bulk-fetch from the eCFR, e.g. ``["1", "301"]``.
         irb_years: Years of the Internal Revenue Bulletin to index, e.g. ``[2024, 2025]``.
+        rate_years: Years to read published § 382 rates for, from the monthly
+            applicable-federal-rate rulings in the Bulletin.
         force: Re-download sources even if they are already on disk.
         connection: An open index connection; one is opened if omitted.
         client: An HTTP client; one is created if omitted.
@@ -186,6 +190,11 @@ def build_index(
             db.set_meta(connection, "irb_years", covered)
             result.source_versions["irb"] = covered
 
+        if rate_years:
+            result.rates = _build_rates(
+                connection, client=client, years=rate_years, progress=progress
+            )
+
         db.rebuild_fts(connection)
         result.refs += _build_xrefs(connection, progress=progress)
         result.definitions = _build_definitions(connection, progress=progress)
@@ -207,6 +216,37 @@ def build_index(
         if owns_connection:
             connection.close()
     return result
+
+
+def _build_rates(
+    connection: sqlite3.Connection,
+    *,
+    client: HttpClient,
+    years: list[int],
+    progress: ProgressCallback | None,
+) -> int:
+    """Read the § 382 long-term tax-exempt rate out of each week's Bulletin.
+
+    The rate rulings appear on no fixed week, so every Bulletin in the year is read
+    and the ones that carry a rate table contribute. A week that does not exist yet —
+    a future week of the current year — is skipped rather than treated as an error.
+    """
+    from taxcite.errors import SourceUnavailableError
+    from taxcite.sources import rates as rate_source
+
+    written = 0
+    for year in years:
+        for week in range(1, 53):
+            try:
+                found = rate_source.fetch_rates(client, year, week)
+            except SourceUnavailableError:
+                continue
+            if not found:
+                continue
+            written += rate_source.index_rates(connection, found)
+            if progress is not None:
+                progress("published rates", written)
+    return written
 
 
 def _build_xrefs(

@@ -117,6 +117,7 @@ uv run python scripts/smoke_test_mcp.py
 | `search_tax_law` | Full-text search across the Code and the regulations |
 | `resolve_citation` | Parse a citation and say whether it exists |
 | `check_case` | Look up a decision, and check a passage before quoting it |
+| `model_section_382` | Compute an I.R.C. § 382 limitation, citing every input |
 | `verify_citations` | Check a whole draft and return a report |
 | `get_cross_references` | What a provision cites, and what cites it |
 | `find_definition` | Where a term is defined, and what scope the definition has |
@@ -343,6 +344,51 @@ cited in 1,401 later decisions, most recently 2026-08-20
 A case cited a thousand times and again last month is alive. One last cited in 1954
 deserves a look before you rely on it. Neither is a treatment determination, and
 TaxCite does not dress it up as one.
+
+## Tax modelling — computation, not advice
+
+Some numbers a tax memo depends on are not in the Code at all. The one that matters
+most in deal work is the **long-term tax-exempt rate** of I.R.C. § 382(f): multiply it
+by the value of a loss corporation and you have the annual ceiling on how much of that
+corporation's pre-change losses a buyer may ever use. It decides what a target's NOLs
+are worth, and it routinely moves prices.
+
+The IRS publishes it monthly, in Table 3 of the applicable-federal-rate Revenue
+Ruling — in the Internal Revenue Bulletin, which TaxCite already reads. So the rate
+does not have to be pasted in from a spreadsheet whose provenance nobody remembers:
+
+```bash
+uv run taxcite build-index --rates 2026
+uv run taxcite model-382 --value 50000000 --change-date 2026-09-15     --nol 30000000 --years 5 --income 1500000,2000000,4000000,4000000,4000000
+```
+
+```
+| Line                              |        Amount | Authority           |
+| Value of the old loss corporation | $50,000,000.00| I.R.C. § 382(e)(1)  |
+| Long-term tax-exempt rate         |               | I.R.C. § 382(f)     |
+|   3.88% for September 2026, published in Rev. Rul. 2026-17 (I.R.B. 2026-37) |
+| Base annual limitation            |  $1,940,000.00| I.R.C. § 382(b)(1)  |
+
+| Year | Limitation | Carried in | Income     | Absorbed   | NOL remaining |
+| 2026 | $1,940,000 |         $0 | $1,500,000 | $1,500,000 |   $28,500,000 |
+| 2027 | $2,380,000 |   $440,000 | $2,000,000 | $2,000,000 |   $26,500,000 |
+| 2028 | $2,320,000 |   $380,000 | $4,000,000 | $2,320,000 |   $24,180,000 |
+```
+
+Every line names the provision that authorises it, and the rate names the ruling it
+came from. The § 382(b)(2) carryforward of unused limitation and the § 382(b)(3)(A)
+short-year proration are applied; § 382(h)(1)(A) built-in gain and § 382(c)(1)
+continuity are accepted as stated inputs and reported as assumptions.
+
+**What it will not do.** It does not determine whether an ownership change occurred —
+that is a § 382(g) question about five-percent shareholders over a testing period, and
+it is not arithmetic. It does not value the corporation. It does not tell you whether
+to do the deal. A month whose rate has not been indexed produces **no answer at all**
+rather than a neighbouring month's rate, because substituting one would silently change
+the result.
+
+That is the line this project draws everywhere: it can tell you what the law says a
+number is; it cannot tell you what to do about it.
 
 ## Revenue Rulings, and whether they are still alive
 

@@ -406,6 +406,36 @@ def insert_cases(
     )
 
 
+def insert_rates(
+    connection: sqlite3.Connection,
+    rows: Iterable[tuple[str, float, float | None, str, str, str]],
+) -> None:
+    """Insert published rates, replacing any earlier copy of the same month."""
+    connection.executemany(
+        "INSERT INTO rates(month, long_term_tax_exempt, adjusted_federal_long_term, "
+        "ruling, bulletin, url) VALUES(?,?,?,?,?,?) "
+        "ON CONFLICT(month) DO UPDATE SET "
+        "long_term_tax_exempt=excluded.long_term_tax_exempt, "
+        "adjusted_federal_long_term=COALESCE("
+        "excluded.adjusted_federal_long_term, rates.adjusted_federal_long_term), "
+        "ruling=excluded.ruling, bulletin=excluded.bulletin, url=excluded.url",
+        list(rows),
+    )
+
+
+def get_rate(connection: sqlite3.Connection, month: str) -> sqlite3.Row | None:
+    """Return the published rates for one month, by its first day."""
+    row: sqlite3.Row | None = connection.execute(
+        "SELECT * FROM rates WHERE month = ?", (month,)
+    ).fetchone()
+    return row
+
+
+def rate_months(connection: sqlite3.Connection) -> list[str]:
+    """Return every month the index holds rates for, earliest first."""
+    return [str(r["month"]) for r in connection.execute("SELECT month FROM rates ORDER BY month")]
+
+
 def get_case(connection: sqlite3.Connection, case_id: str) -> sqlite3.Row | None:
     """Return one cached decision by canonical id."""
     row: sqlite3.Row | None = connection.execute(

@@ -133,6 +133,19 @@ CREATE INDEX IF NOT EXISTS idx_guidance_rel_to ON guidance_relations(to_id);
 -- Court decisions, cached from CourtListener. Metadata only: the keyless API does
 -- not serve opinion text, so a pincite or a quotation cannot be checked and TaxCite
 -- must not imply otherwise.
+-- Rates the government publishes monthly rather than legislating. The § 382(f)
+-- long-term tax-exempt rate is the one that matters in deal work: it is fixed by the
+-- month of the ownership change, so this is keyed by month and looked up exactly. A
+-- neighbouring month is not a substitute and must never be silently substituted.
+CREATE TABLE IF NOT EXISTS rates (
+  month                      TEXT PRIMARY KEY,  -- first day of the governed month
+  long_term_tax_exempt       REAL NOT NULL,     -- § 382(f), as a percentage
+  adjusted_federal_long_term REAL,              -- § 1274(d), same month
+  ruling                     TEXT NOT NULL,     -- "Rev. Rul. 2026-17"
+  bulletin                   TEXT NOT NULL,     -- "2026-37"
+  url                        TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS cases (
   id            TEXT PRIMARY KEY,   -- /us/case/290-u-s-111
   reporter_cite TEXT NOT NULL,

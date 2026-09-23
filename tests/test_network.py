@@ -244,3 +244,29 @@ def test_the_source_really_does_store_the_other_spelling(client: HttpClient) -> 
     """Guards the translation: without it, the ordinary form finds nothing."""
     assert courtlistener.is_searchable(client, "1994 T.C. Memo. 323")
     assert not courtlistener.is_searchable(client, "T.C. Memo. 1994-323")
+
+
+# --------------------------------------------------------------------------------------
+# Published § 382 rates, live
+# --------------------------------------------------------------------------------------
+
+
+def test_the_section_382_rate_is_read_from_a_live_bulletin(client: HttpClient) -> None:
+    """I.R.B. 2026-37 carries Rev. Rul. 2026-17, the rates for September 2026."""
+    from taxcite.sources import rates
+
+    (found,) = rates.fetch_rates(client, 2026, 37)
+    assert found.month.year == 2026
+    assert found.month.month == 9
+    assert found.ruling == "Rev. Rul. 2026-17"
+    assert 0.0 < found.long_term_tax_exempt < 20.0
+
+
+def test_consecutive_bulletins_do_not_collide_on_a_month(client: HttpClient) -> None:
+    """The caption fixes the month; reading the document as a whole did not."""
+    from taxcite.sources import rates
+
+    months = []
+    for week in (28, 32, 37):
+        months += [r.month for r in rates.fetch_rates(client, 2026, week)]
+    assert len(months) == len(set(months)), months

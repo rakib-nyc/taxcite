@@ -336,6 +336,69 @@ def verify_citations(text: str, tax_year: int | None = None) -> str:
 
 @mcp.tool()
 @friendly
+def model_section_382(
+    value: float,
+    change_date: str,
+    nol: float = 0.0,
+    years: int = 0,
+    taxable_income: str | None = None,
+    rbig: float = 0.0,
+    continuity: bool = True,
+    short_year_days: int | None = None,
+) -> str:
+    """Compute the I.R.C. § 382 limitation on a loss corporation's pre-change NOLs.
+
+    After an ownership change, § 382(a) caps how much post-change income the target's
+    pre-change losses may offset. The cap is the corporation's value times the
+    long-term tax-exempt rate for the month of the change — the number that decides
+    what a target's loss carryforwards are worth in a deal.
+
+    This computes and cites; it does not advise. It will not tell you whether an
+    ownership change occurred (a § 382(g) factual question), what the corporation is
+    worth, or whether a position is sustainable.
+
+    Args:
+        value: Fair market value of the loss corporation immediately before the
+            ownership change, I.R.C. § 382(e)(1).
+        change_date: Ownership change date as YYYY-MM-DD. Its month fixes the rate.
+        nol: Pre-change net operating loss carryforwards subject to the limitation.
+        years: How many taxable years to project absorption over.
+        taxable_income: Optional comma-separated projected pre-NOL taxable income per
+            year. Without it the projection assumes income at least equal to the
+            limitation, which is the most favourable case and is labelled as such.
+        rbig: Recognised built-in gain, I.R.C. § 382(h)(1)(A).
+        continuity: Whether continuity of business enterprise is met, § 382(c)(1).
+        short_year_days: Days in the first taxable year, for § 382(b)(3)(A) proration.
+    """
+    from decimal import Decimal
+
+    from taxcite.model import section382
+
+    when = _parse_date(change_date)
+    if when is None:
+        return "change_date is required, as YYYY-MM-DD."
+    projected = (
+        [Decimal(str(float(piece))) for piece in taxable_income.split(",") if piece.strip()]
+        if taxable_income
+        else None
+    )
+    with _index() as connection:
+        result = section382.compute(
+            connection,
+            change_date=when,
+            value=Decimal(str(value)),
+            nol=Decimal(str(nol)),
+            years=years,
+            taxable_income=projected,
+            rbig=Decimal(str(rbig)),
+            continuity=continuity,
+            short_year_days=short_year_days,
+        )
+        return section382.to_markdown(result)
+
+
+@mcp.tool()
+@friendly
 def get_cross_references(citation: str, direction: str = "both") -> str:
     """List what a provision cites, and what cites it.
 

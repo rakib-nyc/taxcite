@@ -41,6 +41,7 @@ EXPECTED_TOOLS = {
     "search_tax_law",
     "resolve_citation",
     "check_case",
+    "model_section_382",
     "verify_citations",
     "get_cross_references",
     "find_definition",

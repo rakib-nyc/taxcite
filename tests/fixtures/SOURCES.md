@@ -169,3 +169,20 @@ against the decision it came from:
 The opinion text used in `tests/test_case_quotes.py` is **synthetic** — invented,
 obviously so, and about periscopes — because those tests exercise matching mechanics,
 star pagination and pinpoint arithmetic rather than any real holding.
+
+## `rates/` — published § 382 rates
+
+- **Publisher:** Internal Revenue Service.
+- **URL:** `https://www.irs.gov/irb/2026-37_IRB`
+- **Retrieved:** 2026-09-23
+- **Status:** public domain (17 U.S.C. § 105).
+
+| File | Why it is here |
+|---|---|
+| `irb-2026-37-table3.html` | Table 3 of Rev. Rul. 2026-17, verbatim, with the sentence that states the month it governs |
+
+The § 382(f) long-term tax-exempt rate is published monthly in Table 3 of the
+applicable-federal-rate ruling. The excerpt is the table exactly as the IRS published
+it, trimmed only of the surrounding bulletin — the rate (3.88% for September 2026),
+the ruling number and the wording of the row labels are unaltered, because the parser
+matches on that wording.
